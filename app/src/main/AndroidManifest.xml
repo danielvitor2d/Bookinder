@@ -15,10 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bookinder"
         tools:targetApi="31" >
-
+        
         <activity
             android:name=".screens.sign.SignInActivity"
             android:exported="true" >
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,6 +29,10 @@
 
         <activity
             android:name=".screens.sign.SignUpActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".screens.home.Home"
             android:exported="false" />
 
     </application>
