@@ -33,23 +33,36 @@ class Home: AppCompatActivity() {
     navigationView = findViewById(R.id.navigation_view)
 
     navigationView.setNavigationItemSelectedListener {
-      Toast.makeText(this, "Selecionou: ${it.title}", Toast.LENGTH_SHORT).show()
       when(it.itemId) {
-        R.id.feed_item -> supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
-          FeedFragment()).commit()
-        R.id.profile_item -> supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
-          ProfileFragment()).commit()
-        R.id.my_books_item -> supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
-          MyBooksFragment()).commit()
-        R.id.loans_item -> supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
-          LoansFragment()).commit()
-        R.id.settings_item -> supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
-          SettingsFragment()).commit()
+        R.id.feed_item -> {
+          drawerLayout.closeDrawer(GravityCompat.START)
+          supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
+            FeedFragment()).commit()
+        }
+        R.id.profile_item -> {
+          drawerLayout.closeDrawer(GravityCompat.START)
+          supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
+            ProfileFragment()).commit()
+        }
+        R.id.my_books_item -> {
+          drawerLayout.closeDrawer(GravityCompat.START)
+          supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
+            MyBooksFragment()).commit()
+        }
+        R.id.loans_item -> {
+          drawerLayout.closeDrawer(GravityCompat.START)
+          supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
+            LoansFragment()).commit()
+        }
+        R.id.settings_item -> {
+          drawerLayout.closeDrawer(GravityCompat.START)
+          supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
+            SettingsFragment()).commit()
+        }
         R.id.logout_item -> {
-          exitProcess(0)
+          finish()
         }
       }
-      drawerLayout.closeDrawer(GravityCompat.START)
       return@setNavigationItemSelectedListener true
     }
 
