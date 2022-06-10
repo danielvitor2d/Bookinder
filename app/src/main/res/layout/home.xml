@@ -10,7 +10,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include layout="@layout/toolbar" />
+    <include android:id="@+id/appbar" layout="@layout/toolbar" />
 
     <FrameLayout
         android:layout_width="match_parent"

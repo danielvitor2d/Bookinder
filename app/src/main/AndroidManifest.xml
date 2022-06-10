@@ -19,7 +19,6 @@
         <activity
             android:name=".screens.sign.SignInActivity"
             android:exported="true" >
-        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +27,7 @@
         </activity>
 
         <activity
-            android:name=".screens.sign.SignUpActivity"
+            android:name=".screens.sign_up.SignUpActivity"
             android:exported="false" />
 
         <activity
