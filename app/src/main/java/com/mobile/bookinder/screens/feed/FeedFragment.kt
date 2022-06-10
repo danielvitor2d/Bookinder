@@ -22,6 +22,8 @@ class FeedFragment: Fragment() {
     return view;
   }
 
+
+
   private fun setUpRecyclerView(view: View) {
     val itemList = view.findViewById<RecyclerView>(R.id.itemList)
     itemList.layoutManager = LinearLayoutManager(view.context)

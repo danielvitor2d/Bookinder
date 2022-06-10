@@ -9,6 +9,8 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.mobile.bookinder.R
+import com.mobile.bookinder.databinding.ActivitySignInBinding
+import com.mobile.bookinder.databinding.HomeBinding
 import com.mobile.bookinder.screens.feed.FeedFragment
 import com.mobile.bookinder.screens.loans.LoansFragment
 import com.mobile.bookinder.screens.my_books.MyBooksFragment
@@ -18,19 +20,21 @@ import kotlin.system.exitProcess
 
 class Home: AppCompatActivity() {
   lateinit var drawerLayout: DrawerLayout
-  lateinit var navigationView: NavigationView
+  private lateinit var navigationView: NavigationView
+  private lateinit var binding: HomeBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.home)
+    binding = HomeBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
     supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
       FeedFragment()).commit()
 
-    val toolbar: Toolbar = findViewById(R.id.toolbar)
-    setSupportActionBar(toolbar)
+    setSupportActionBar(binding.appbar.toolbar)
 
-    drawerLayout = findViewById(R.id.drawer_layout)
-    navigationView = findViewById(R.id.navigation_view)
+    drawerLayout = binding.drawerLayout
+    navigationView = binding.navigationView
 
     navigationView.setNavigationItemSelectedListener {
       when(it.itemId) {
@@ -66,7 +70,7 @@ class Home: AppCompatActivity() {
       return@setNavigationItemSelectedListener true
     }
 
-    val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer)
+    val toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appbar.toolbar, R.string.open_drawer, R.string.close_drawer)
 
     drawerLayout.addDrawerListener(toggle)
 
