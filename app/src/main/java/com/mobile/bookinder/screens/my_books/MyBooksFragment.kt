@@ -1,5 +1,7 @@
 package com.mobile.bookinder.screens.my_books
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
 import com.mobile.bookinder.databinding.FragmentMyBooksBinding
+import com.mobile.bookinder.screens.book_registration.BookRegistration
 
 class MyBooksFragment: Fragment() {
   private var _binding: FragmentMyBooksBinding? = null
@@ -20,7 +23,11 @@ class MyBooksFragment: Fragment() {
     savedInstanceState: Bundle?
   ): View? {
     _binding = FragmentMyBooksBinding.inflate(inflater, container, false)
-    setUpRecyclerView(binding.root)
+    setUpRecyclerView(binding.root);
+    this._binding!!.button.setOnClickListener {
+      val intent = Intent(context, BookRegistration::class.java);
+      startActivity(intent);
+    };
 
     return binding.root
   }

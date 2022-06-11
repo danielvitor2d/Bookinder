@@ -3,8 +3,32 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/drawable-anydpi/ic_open_profile_menu.xml" value="0.121" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.121" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/drawable/facebook_logo.xml" value="0.121" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/drawable/google_logo.xml" value="0.121" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/drawable/ic_arrow.xml" value="0.121" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/drawable/ic_launcher_background.xml" value="0.121" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/drawable/ic_launcher_pen.xml" value="0.157" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/drawable/ic_logo__tinderbook.xml" value="0.121" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/drawable/title.xml" value="0.121" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/activity_book_registration.xml" value="0.264" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/activity_sign_in.xml" value="0.264" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/activity_sign_up.xml" value="0.1046875" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/book_registration.xml" value="0.15571955719557196" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/content_book_registration.xml" value="0.136" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/fragment_first.xml" value="0.10989583333333333" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/fragment_my_books.xml" value="0.16799999999999998" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/fragment_second.xml" value="0.2" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/fragment_settings.xml" value="0.1046875" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/home.xml" value="0.264" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/message_card_books.xml" value="0.6" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/layout/toolbar.xml" value="0.1" />
+        <entry key="..\:/workspace/git-projects/Bookinder/Bookinder/app/src/main/res/menu/navigation_items.xml" value="0.1515625" />
+        <entry key="app/src/main/res/drawable-anydpi/ic_logout_menu.xml" value="0.1515" />
         <entry key="app/src/main/res/drawable-anydpi/ic_search.xml" value="0.1325" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.212" />
+        <entry key="app/src/main/res/drawable/facebook_logo.xml" value="0.1515" />
         <entry key="app/src/main/res/drawable/google_logo.xml" value="0.1535" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1325" />
         <entry key="app/src/main/res/drawable/ic_logo__tinderbook.xml" value="0.1535" />
@@ -19,7 +43,6 @@
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.284375" />
         <entry key="app/src/main/res/layout/home.xml" value="0.28541666666666665" />
         <entry key="app/src/main/res/layout/message_card.xml" value="0.284375" />
-        <entry key="app/src/main/res/layout/message_card_books.xml" value="0.28541666666666665" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.25" />
         <entry key="app/src/main/res/layout/rounded_edittext.xml" value="0.284375" />
         <entry key="app/src/main/res/layout/sign_in.xml" value="0.33" />
@@ -28,7 +51,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

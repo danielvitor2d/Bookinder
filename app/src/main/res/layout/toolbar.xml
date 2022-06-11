@@ -9,8 +9,11 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
+        android:parentActivityName="com.mobile.bookinder/com.mobile.bookinder.screens.my_books"
         android:layout_height="?attr/actionBarSize"
         android:background="#05445E"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:navigationIcon="@drawable/ic_arrow"/>
+
 
 </LinearLayout>
