@@ -1,22 +1,18 @@
 package com.mobile.bookinder.screens.home
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.mobile.bookinder.R
-import com.mobile.bookinder.databinding.ActivitySignInBinding
 import com.mobile.bookinder.databinding.HomeBinding
 import com.mobile.bookinder.screens.feed.FeedFragment
 import com.mobile.bookinder.screens.loans.LoansFragment
 import com.mobile.bookinder.screens.my_books.MyBooksFragment
 import com.mobile.bookinder.screens.profile.ProfileFragment
 import com.mobile.bookinder.screens.settings.SettingsFragment
-import kotlin.system.exitProcess
 
 class Home: AppCompatActivity() {
   lateinit var drawerLayout: DrawerLayout
@@ -75,7 +71,6 @@ class Home: AppCompatActivity() {
     drawerLayout.addDrawerListener(toggle)
 
     toggle.syncState()
-
   }
 
   override fun onBackPressed() {

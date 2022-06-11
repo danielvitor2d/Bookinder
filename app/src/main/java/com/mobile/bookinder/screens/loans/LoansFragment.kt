@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import com.mobile.bookinder.databinding.FragmentLoansBinding
 
 class LoansFragment: Fragment() {
-
   private var _binding: FragmentLoansBinding? = null
   private val binding get() = _binding!!
 

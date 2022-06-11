@@ -1,4 +1,4 @@
-package com.mobile.bookinder.common
+package com.mobile.bookinder.screens.my_books
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
 
-class ItemAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ItemAdapterBook: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
   private val books: MutableList<String> =
     mutableListOf(
       "Livro: As aventuras de Al Samir",
@@ -28,8 +28,8 @@ class ItemAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
     val card = LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.message_card, parent, false)
+      .from(parent.context)
+      .inflate(R.layout.message_card_books, parent, false)
     return MessageViewHolder(card)
   }
 
