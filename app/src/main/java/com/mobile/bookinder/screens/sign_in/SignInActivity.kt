@@ -1,4 +1,4 @@
-package com.mobile.bookinder.screens.sign
+package com.mobile.bookinder.screens.sign_in
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -21,8 +21,6 @@ class SignInActivity : AppCompatActivity() {
   }
 
   private fun setUpListeners() {
-
-
     //Texto para SignUp
     binding.signUpText.setOnClickListener{
       val intent = Intent(this, SignUpActivity::class.java)

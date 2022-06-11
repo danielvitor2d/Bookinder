@@ -20,7 +20,7 @@ class ItemAdapterBook: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
     val card = LayoutInflater
       .from(parent.context)
-      .inflate(R.layout.message_card_books, parent, false)
+      .inflate(R.layout.message_card_feed_books, parent, false)
     return MessageViewHolder(card)
   }
 

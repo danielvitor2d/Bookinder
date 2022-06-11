@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.17391304347826086" />
         <entry key="app/src/main/res/layout/feed.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/feedback.xml" value="0.28541666666666665" />
         <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.284375" />
         <entry key="app/src/main/res/layout/fragment_loans.xml" value="0.284375" />
         <entry key="app/src/main/res/layout/fragment_my_books.xml" value="0.284375" />
@@ -20,6 +21,7 @@
         <entry key="app/src/main/res/layout/home.xml" value="0.28541666666666665" />
         <entry key="app/src/main/res/layout/message_card.xml" value="0.284375" />
         <entry key="app/src/main/res/layout/message_card_books.xml" value="0.28541666666666665" />
+        <entry key="app/src/main/res/layout/message_card_my_books.xml" value="0.28541666666666665" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.25" />
         <entry key="app/src/main/res/layout/rounded_edittext.xml" value="0.284375" />
         <entry key="app/src/main/res/layout/sign_in.xml" value="0.33" />
