@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="300dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="14dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
@@ -90,7 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,27 +106,49 @@
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_registration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/socialicons"
+        app:layout_constraintTop_toBottomOf="@+id/cardView_id">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_registration"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blue_grotto"
+            android:text="@string/registration"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
         android:id="@+id/socialicons"
-        app:layout_constraintTop_toBottomOf="@id/cardView_id"
-        app:layout_constraintBottom_toTopOf="@id/signUpText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="center">
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@id/signUpText"
+        app:layout_constraintTop_toBottomOf="@+id/cardView_registration">
 
         <ImageView
             android:id="@+id/goole_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="20dp"
-            android:src="@drawable/google_logo"/>
+            android:src="@drawable/google_logo" />
+
         <ImageView
             android:id="@+id/face_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="20dp"
-            android:src="@drawable/facebook_logo"/>
+            android:src="@drawable/facebook_logo" />
 
     </LinearLayout>
 
