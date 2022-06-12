@@ -3,15 +3,15 @@ package com.mobile.bookinder.screens.feedback
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import com.mobile.bookinder.databinding.FeedbackBinding
+import com.mobile.bookinder.databinding.ActivityFeedbackBinding
 
 class Feedback : AppCompatActivity() {
-  private lateinit var binding: FeedbackBinding
+  private lateinit var binding: ActivityFeedbackBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    binding = FeedbackBinding.inflate(layoutInflater)
+    binding = ActivityFeedbackBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
     setUpActionBar()

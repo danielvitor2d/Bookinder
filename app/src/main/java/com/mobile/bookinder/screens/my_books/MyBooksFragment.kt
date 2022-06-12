@@ -28,7 +28,7 @@ class MyBooksFragment: Fragment() {
   private fun setUpRecyclerView(view: View) {
     val itemList = view.findViewById<RecyclerView>(R.id.itemListMyBooks)
     itemList.layoutManager = LinearLayoutManager(view.context)
-    itemList.adapter = ItemAdapterBook()
+    itemList.adapter = BookAdapter()
   }
 
   override fun onDestroyView(){

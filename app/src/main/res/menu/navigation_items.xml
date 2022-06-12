@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
     <group>
-        <item android:icon="@drawable/ic_open_feed_menu" android:id="@+id/feed_item" android:title="Feed" />
-        <item android:icon="@drawable/ic_open_profile_menu" android:id="@+id/profile_item" android:title="Perfil" />
-        <item android:icon="@drawable/ic_open_book_menu" android:id="@+id/my_books_item" android:title="Meus livros" />
-        <item android:icon="@drawable/ic_open_loans_menu" android:id="@+id/loans_item" android:title="Empréstimos" />
+        <item
+            android:icon="@drawable/ic_open_feed_menu"
+            android:id="@+id/feed_menu"
+            android:title="Feed" />
+        <item
+            android:icon="@drawable/ic_open_profile_menu"
+            android:id="@+id/profile_menu"
+            android:title="Perfil" />
+        <item
+            android:icon="@drawable/ic_open_my_books_menu"
+            android:id="@+id/my_books_menu"
+            android:title="Meus livros" />
+        <item
+            android:icon="@drawable/ic_open_matches_menu"
+            android:id="@+id/matches_menu"
+            android:title="Matches" />
+        <item
+            android:icon="@drawable/ic_open_likes_menu"
+            android:id="@+id/likes_menu"
+            android:title="Curtidas" />
     </group>
     <group android:id="@+id/system_group" >
         <item
@@ -15,39 +31,8 @@
             android:id="@+id/settings_item"
             android:title="Configurações" />
         <item
-            android:icon="@drawable/ic_logout_menu"
+            android:icon="@drawable/ic_logout"
             android:id="@+id/logout_item"
             android:title="Logout" />
     </group>
-
-
-<!--    <group>-->
-<!--        <item android:id="@+id/nav_item_one"-->
-<!--            android:icon="@android:drawable/ic_menu_add"-->
-<!--            android:title="Item 1" />-->
-<!--        <item android:id="@+id/nav_item_two"-->
-<!--            android:icon="@android:drawable/ic_menu_agenda"-->
-<!--            android:title="Item 2" />-->
-<!--        <item android:id="@+id/nav_item_three"-->
-<!--            android:icon="@android:drawable/ic_menu_call"-->
-<!--            android:title="Item 3" />-->
-<!--    </group>-->
-
-<!--    <group android:id="@+id/group_menu">-->
-<!--        <item android:id="@+id/nav_item_four"-->
-<!--            android:title="Item 4" />-->
-<!--        <item android:id="@+id/nav_item_five"-->
-<!--            android:title="Item 5" />-->
-<!--    </group>-->
-
-<!--    <item android:title="Title 1">-->
-<!--        <menu>-->
-<!--            <item android:id="@+id/nav_item_six"-->
-<!--                android:icon="@android:drawable/ic_menu_camera"-->
-<!--                android:title="Item 6" />-->
-<!--            <item android:id="@+id/nav_item_seven"-->
-<!--                android:icon="@android:drawable/ic_menu_compass"-->
-<!--                android:title="Item 7" />-->
-<!--        </menu>-->
-<!--    </item>-->
 </menu>

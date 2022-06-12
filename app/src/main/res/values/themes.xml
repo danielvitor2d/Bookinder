@@ -5,7 +5,6 @@
         <item name="colorPrimary">@color/blue_grotto</item>
         <item name="colorPrimaryVariant">@color/blue_green</item>
         <item name="colorOnPrimary">@color/baby_blue</item>
-
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/navy_blue</item>
         <!-- Status bar color. -->
