@@ -31,7 +31,7 @@
             android:name=".screens.sign_up.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.home.Home"
+            android:name=".screens.home.HomeActivity"
             android:exported="false" />
         <activity
             android:name=".screens.feedback.Feedback"

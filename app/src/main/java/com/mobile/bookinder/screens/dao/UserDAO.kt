@@ -4,8 +4,8 @@ import com.mobile.bookinder.common.User
 
 class UserDAO {
   fun insert(new_user: User): Boolean{
-    for(user in userList) {
-      if(new_user.email == user.email)
+    for (user in userList) {
+      if (new_user.email == user.email)
         return false
     }
     userList.add(new_user)
@@ -14,8 +14,8 @@ class UserDAO {
   }
 
   fun find(email: String, password: String): User? {
-    for(user in userList) {
-      if(user.email == email && user.password == password)
+    for (user in userList) {
+      if (user.email == email && user.password == password)
         return user
     }
     return null

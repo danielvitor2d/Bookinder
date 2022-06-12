@@ -4,24 +4,19 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.mobile.bookinder.common.Book
+import com.mobile.bookinder.common.LoggedUser
 import com.mobile.bookinder.common.User
 import com.mobile.bookinder.databinding.ActivitySignInBinding
 import com.mobile.bookinder.screens.dao.UserDAO
-import com.mobile.bookinder.screens.home.Home
+import com.mobile.bookinder.screens.home.HomeActivity
 import com.mobile.bookinder.screens.sign_up.SignUpActivity
 import java.util.*
 
 class SignInActivity : AppCompatActivity() {
-
-  private val users: MutableList<User> = mutableListOf(
-    User(UUID.randomUUID(), "danielvitor.p1@gmail.com", "daniel123")
-    User(UUID.randomUUID(), "teste", "teste")
-  )
-
-  private val books: MutableList<Book> = mutableListOf()
-
   private lateinit var binding: ActivitySignInBinding
+
+  private val userDAO = UserDAO()
+  private val loggedUser = LoggedUser()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -29,42 +24,37 @@ class SignInActivity : AppCompatActivity() {
     binding = ActivitySignInBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
+    userDAO.insert(User(UUID.randomUUID(), "Daniel", "daniel", "daniel"))
+    userDAO.insert(User(UUID.randomUUID(), "teste", "teste", "teste"))
+
     setUpListeners()
   }
 
   private fun setUpListeners() {
-    //Texto para SignUp
-    binding.signUpText.setOnClickListener{
-      val intent = Intent(this, SignUpActivity::class.java)
-      startActivity(intent)
-    }
+    binding.signInButton.setOnClickListener {
+      val fieldEmail = binding.editTextUserEmail.text.toString()
+      val fieldPassword = binding.editTextUserPassword.text.toString()
 
-    //Botão de Login
-    binding.button.setOnClickListener {
-      val fieldEmail = binding.editTextEmail.text.toString()
-      val fieldPassword = binding.editTextPassword.text.toString()
+      val user = userDAO.find(fieldEmail, fieldPassword)
 
-      val userDao = UserDAO()
-      if(userDao.find(fieldEmail, fieldPassword) is User) {
-        val intent = Intent(this, Home::class.java)
+      if (user != null) {
+        loggedUser.login(user)
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()
-      }else{
+      } else {
         Toast.makeText(this, "Email e/ou senha inválidos", Toast.LENGTH_SHORT).show()
       }
     }
 
-    //Botão de cadastro
-    binding.buttonRegistration.setOnClickListener {
+    binding.signUpText.setOnClickListener {
       val intent = Intent(this, SignUpActivity::class.java)
       startActivity(intent)
     }
 
-    //Botão Entrar com Google
     binding.gooleBtn.setOnClickListener {
 
     }
-    //Botão Entrar com Facebook
     binding.faceBtn.setOnClickListener {
 
     }

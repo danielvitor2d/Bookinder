@@ -2,12 +2,15 @@ package com.mobile.bookinder.screens.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.mobile.bookinder.R
+import com.mobile.bookinder.common.LoggedUser
 import com.mobile.bookinder.databinding.ActivityHomeBinding
 import com.mobile.bookinder.screens.feed.FeedFragment
 import com.mobile.bookinder.screens.likes.LikesFragment
@@ -17,10 +20,12 @@ import com.mobile.bookinder.screens.profile.ProfileFragment
 import com.mobile.bookinder.screens.settings.SettingsFragment
 import com.mobile.bookinder.screens.sign_in.SignInActivity
 
-class Home: AppCompatActivity() {
+class HomeActivity: AppCompatActivity() {
   lateinit var drawerLayout: DrawerLayout
   private lateinit var navigationView: NavigationView
   private lateinit var binding: ActivityHomeBinding
+
+  private val loggedUser = LoggedUser()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -87,6 +92,26 @@ class Home: AppCompatActivity() {
     drawerLayout.addDrawerListener(toggle)
 
     toggle.syncState()
+
+    val user = loggedUser.getUser()
+
+    val headerView = navigationView.getHeaderView(0)
+
+
+    val textViewUserName = headerView.findViewById<TextView>(R.id.textViewUserName)
+    "${user?.firstname} ${user?.lastname}".also {
+      textViewUserName.text = it
+    }
+
+    val textViewUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
+    "${user?.email}".also {
+      textViewUserEmail.text = it
+    }
+
+    val imageViewCloseNavigationView = headerView.findViewById<ImageView>(R.id.imageViewCloseNavigationView)
+    imageViewCloseNavigationView.setOnClickListener {
+      drawerLayout.closeDrawer(GravityCompat.START)
+    }
   }
 
   override fun onBackPressed() {

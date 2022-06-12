@@ -54,8 +54,8 @@
             style="@style/SignUpTextInputInnerFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/type_your_name"
-            android:inputType="text"/>
+            android:hint="Digite seu primeiro nome"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -64,6 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
@@ -73,14 +74,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameLayout">
 
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextEmail"
             style="@style/SignUpTextInputInnerFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/type_your_email"
+            android:hint="Digite seu e-mail"
             android:inputType="textEmailAddress" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -89,6 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
@@ -96,15 +98,15 @@
         app:boxCornerRadiusTopStart="15dp"
         app:hintTextColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailLayout">
-
+        app:layout_constraintTop_toBottomOf="@+id/emailLayout"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPassword"
             style="@style/SignUpTextInputInnerFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/type_your_password"
+            android:hint="Digite sua senha"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -113,7 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordLayout">
@@ -123,7 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/blue_grotto"
-            android:text="@string/register"
+            android:text="Cadastrar-se"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>

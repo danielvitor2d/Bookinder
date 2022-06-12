@@ -12,11 +12,8 @@ import com.mobile.bookinder.databinding.FragmentProfileBinding
 import com.mobile.bookinder.screens.feedback.Feedback
 
 class ProfileFragment: Fragment() {
-
   private var _binding: FragmentProfileBinding? = null
   private val binding get() = _binding!!
-
-  private lateinit var buttonVisualizarFeedbacks: Button
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -25,7 +22,6 @@ class ProfileFragment: Fragment() {
   ): View? {
     _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-    buttonVisualizarFeedbacks = binding.buttonVisualizarFeedbacks
 
     setUpListeners(binding.root.context)
 
@@ -38,9 +34,6 @@ class ProfileFragment: Fragment() {
   }
 
   private fun setUpListeners(context: Context) {
-    buttonVisualizarFeedbacks.setOnClickListener {
-      val intent = Intent(context, Feedback::class.java)
-      startActivity(intent)
-    }
+
   }
 }
