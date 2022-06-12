@@ -11,6 +11,6 @@ class User(
   val photo_id: UUID?,
   val books: MutableList<UUID>?
 ) {
-  constructor(_email: String, _password: String) :
-    this(null, _email, "", "", _password, null, mutableListOf())
+  constructor(_user_id: UUID?, _email: String, _password: String) :
+    this(_user_id, _email, "", "", _password, null, mutableListOf())
 }

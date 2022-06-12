@@ -4,18 +4,22 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.mobile.bookinder.common.Book
 import com.mobile.bookinder.common.User
 import com.mobile.bookinder.databinding.ActivitySignInBinding
 import com.mobile.bookinder.screens.dao.UserDAO
 import com.mobile.bookinder.screens.home.Home
 import com.mobile.bookinder.screens.sign_up.SignUpActivity
+import java.util.*
 
 class SignInActivity : AppCompatActivity() {
 
   private val users: MutableList<User> = mutableListOf(
-    User("danielvitor.p1@gmail.com", "daniel123"),
-    User("teste", "teste")
+    User(UUID.randomUUID(), "danielvitor.p1@gmail.com", "daniel123")
+    User(UUID.randomUUID(), "teste", "teste")
   )
+
+  private val books: MutableList<Book> = mutableListOf()
 
   private lateinit var binding: ActivitySignInBinding
 
