@@ -6,13 +6,15 @@ import android.os.Bundle
 import android.widget.Toast
 import com.mobile.bookinder.common.User
 import com.mobile.bookinder.databinding.ActivitySignInBinding
+import com.mobile.bookinder.screens.dao.UserDAO
 import com.mobile.bookinder.screens.home.Home
 import com.mobile.bookinder.screens.sign_up.SignUpActivity
 
 class SignInActivity : AppCompatActivity() {
 
   private val users: MutableList<User> = mutableListOf(
-    User("danielvitor.p1@gmail.com", "daniel123")
+    User("danielvitor.p1@gmail.com", "daniel123"),
+    User("teste", "teste")
   )
 
   private lateinit var binding: ActivitySignInBinding
@@ -38,26 +40,22 @@ class SignInActivity : AppCompatActivity() {
       val fieldEmail = binding.editTextEmail.text.toString()
       val fieldPassword = binding.editTextPassword.text.toString()
 
-      var validCredentials: Boolean = false
-
-      users.forEach { user ->
-//        Toast.makeText(this, "{$fieldEmail}:{${user.email}}", Toast.LENGTH_LONG).show()
-//        Toast.makeText(this, "{$fieldPassword}:{${user.password}}", Toast.LENGTH_LONG).show()
-        if (user.email == fieldEmail && user.password == fieldPassword) {
-          validCredentials = true
-          return@forEach
-        }
-      }
-
-      if (validCredentials) {
-        binding.editTextEmail.setText("")
-        binding.editTextPassword.setText("")
+      val userDao = UserDAO()
+      if(userDao.find(fieldEmail, fieldPassword) is User) {
         val intent = Intent(this, Home::class.java)
         startActivity(intent)
-      } else {
+        finish()
+      }else{
         Toast.makeText(this, "Email e/ou senha inválidos", Toast.LENGTH_SHORT).show()
       }
     }
+
+    //Botão de cadastro
+    binding.buttonRegistration.setOnClickListener {
+      val intent = Intent(this, SignUpActivity::class.java)
+      startActivity(intent)
+    }
+
     //Botão Entrar com Google
     binding.gooleBtn.setOnClickListener {
 
