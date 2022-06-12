@@ -1,5 +1,6 @@
 package com.mobile.bookinder.screens.home
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import com.mobile.bookinder.screens.matches.MatchesFragment
 import com.mobile.bookinder.screens.my_books.MyBooksFragment
 import com.mobile.bookinder.screens.profile.ProfileFragment
 import com.mobile.bookinder.screens.settings.SettingsFragment
+import com.mobile.bookinder.screens.sign_in.SignInActivity
 
 class Home: AppCompatActivity() {
   lateinit var drawerLayout: DrawerLayout
@@ -72,6 +74,8 @@ class Home: AppCompatActivity() {
             SettingsFragment()).commit()
         }
         R.id.logout_item -> {
+          val intent = Intent(this, SignInActivity::class.java)
+          startActivity(intent)
           finish()
         }
       }
