@@ -25,7 +25,7 @@ class LikesFragment: Fragment() {
   }
 
   private fun setUpRecyclerView(view: View) {
-    val likesList = view.findViewById<RecyclerView>(R.id.likesList)
+    val likesList = view.findViewById<RecyclerView>(R.id.matchesList)
     likesList.layoutManager = LinearLayoutManager(view.context)
     likesList.adapter = LikeAdapter()
   }
