@@ -10,7 +10,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.mobile.bookinder.R
-import com.mobile.bookinder.common.LoggedUser
+import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.databinding.ActivityHomeBinding
 import com.mobile.bookinder.screens.feed.FeedFragment
 import com.mobile.bookinder.screens.likes.LikesFragment
@@ -93,21 +93,9 @@ class HomeActivity: AppCompatActivity() {
 
     toggle.syncState()
 
-    val user = loggedUser.getUser()
+    updateHeader()
 
     val headerView = navigationView.getHeaderView(0)
-
-
-    val textViewUserName = headerView.findViewById<TextView>(R.id.textViewUserName)
-    "${user?.firstname} ${user?.lastname}".also {
-      textViewUserName.text = it
-    }
-
-    val textViewUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
-    "${user?.email}".also {
-      textViewUserEmail.text = it
-    }
-
     val imageViewCloseNavigationView = headerView.findViewById<ImageView>(R.id.imageViewCloseNavigationView)
     imageViewCloseNavigationView.setOnClickListener {
       drawerLayout.closeDrawer(GravityCompat.START)
@@ -119,6 +107,22 @@ class HomeActivity: AppCompatActivity() {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
       super.onBackPressed()
+    }
+  }
+
+  fun updateHeader() {
+    val user = loggedUser.getUser()
+
+    val headerView = navigationView.getHeaderView(0)
+
+    val textViewUserName = headerView.findViewById<TextView>(R.id.textViewUserName)
+    "${user?.firstname} ${user?.lastname}".also {
+      textViewUserName.text = it
+    }
+
+    val textViewUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
+    "${user?.email}".also {
+      textViewUserEmail.text = it
     }
   }
 }

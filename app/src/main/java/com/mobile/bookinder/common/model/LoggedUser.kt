@@ -1,4 +1,4 @@
-package com.mobile.bookinder.common
+package com.mobile.bookinder.common.model
 
 class LoggedUser {
   fun login(_user: User) {

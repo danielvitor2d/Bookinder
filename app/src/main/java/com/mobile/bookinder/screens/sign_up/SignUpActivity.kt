@@ -1,14 +1,11 @@
 package com.mobile.bookinder.screens.sign_up
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
-import com.mobile.bookinder.common.User
+import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.databinding.ActivitySignUpBinding
-import com.mobile.bookinder.screens.dao.UserDAO
-import com.mobile.bookinder.screens.sign_in.SignInActivity
+import com.mobile.bookinder.common.dao.UserDAO
 import java.util.*
 
 class SignUpActivity : AppCompatActivity() {

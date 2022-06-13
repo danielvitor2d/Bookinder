@@ -1,6 +1,7 @@
-package com.mobile.bookinder.screens.dao
+package com.mobile.bookinder.common.dao
 
-import com.mobile.bookinder.common.User
+import com.mobile.bookinder.common.model.User
+import java.util.*
 
 class UserDAO {
   fun insert(new_user: User): Boolean{
@@ -19,6 +20,15 @@ class UserDAO {
         return user
     }
     return null
+  }
+
+  fun setUser(user_id: UUID?, _user: User) {
+    for (i in 0 until userList.size) {
+      if (userList[i].user_id == user_id) {
+        userList[i] = _user
+        return
+      }
+    }
   }
 
   companion object {

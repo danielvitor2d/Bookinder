@@ -4,10 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.mobile.bookinder.common.LoggedUser
-import com.mobile.bookinder.common.User
+import com.mobile.bookinder.common.model.LoggedUser
+import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.databinding.ActivitySignInBinding
-import com.mobile.bookinder.screens.dao.UserDAO
+import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.screens.home.HomeActivity
 import com.mobile.bookinder.screens.sign_up.SignUpActivity
 import java.util.*
