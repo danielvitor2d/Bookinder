@@ -4,40 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/navy_blue"
-    tools:context=".screens.sign_up.SignUpActivity">
+    android:background="@drawable/background2"
+    tools:context=".screens.my_books.BookRegister">
 
 
     <ImageView
         android:id="@+id/logo_icon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_width="464dp"
+        android:layout_height="124dp"
+        android:layout_marginTop="80dp"
         android:src="@drawable/ic_logo__tinderbook"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/bookinder"
-        android:textColor="@color/white"
-        android:textSize="40sp"
+        android:layout_marginTop="68dp"
+        android:text="@string/book_register"
+        android:textColor="@color/navy_blue"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logo_icon" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameLayout"
+        android:id="@+id/titleLayout"
         style="@style/SignUpTextInputInnerFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="0dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
@@ -47,19 +48,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView4">
+        app:layout_constraintTop_toBottomOf="@id/title">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextName"
+            android:id="@+id/editTextTitle"
             style="@style/SignUpTextInputInnerFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/type_your_name"
+            android:hint="@string/book_title"
             android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailLayout"
+        android:id="@+id/authorLayout"
         style="@style/SignUpTextInputInnerFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,23 +72,23 @@
         app:boxCornerRadiusTopStart="15dp"
         app:hintTextColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameLayout">
+        app:layout_constraintTop_toBottomOf="@+id/titleLayout">
 
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/editTextAuthor"
             style="@style/SignUpTextInputInnerFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/type_your_email"
-            android:inputType="textEmailAddress" />
+            android:hint="@string/book_author"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/passwordLayout"
+        android:id="@+id/synopsisLayout"
         style="@style/SignUpTextInputInnerFieldStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="95dp"
         android:layout_marginHorizontal="16dp"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
@@ -96,16 +97,16 @@
         app:boxCornerRadiusTopStart="15dp"
         app:hintTextColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailLayout">
+        app:layout_constraintTop_toBottomOf="@+id/authorLayout">
 
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextPassword"
+            android:id="@+id/editTextSynopsis"
             style="@style/SignUpTextInputInnerFieldStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/type_your_password"
-            android:inputType="textPassword" />
+            android:layout_height="70dp"
+            android:hint="@string/book_synopsis"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.cardview.widget.CardView
@@ -113,13 +114,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="10dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordLayout">
+        app:layout_constraintTop_toBottomOf="@+id/synopsisLayout">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/register"
+            android:id="@+id/bookregister"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/blue_grotto"

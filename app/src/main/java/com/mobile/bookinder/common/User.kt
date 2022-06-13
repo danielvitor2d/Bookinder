@@ -1,16 +1,20 @@
 package com.mobile.bookinder.common
 
+import android.os.Parcelable
 import java.util.*
 
 class User(
-  val user_id: UUID?,
-  val email: String,
-  val firstname: String,
-  val lastname: String?,
-  val password: String,
-  val photo_id: UUID?,
-  val books: MutableList<UUID>?
+  var user_id: Int,
+  var email: String,
+  var firstname: String,
+  var lastname: String?,
+  var password: String,
+  var photo_id: UUID?,
+  var books: MutableList<Int>?
 ) {
+  constructor(id: Int, _email: String, _firstname: String, _password: String) :
+    this(id, _email, _firstname, "", _password, null, mutableListOf())
+
   constructor(_email: String, _password: String) :
-    this(null, _email, "", "", _password, null, mutableListOf())
+    this(-1, _email, "", "", _password, null, mutableListOf())
 }

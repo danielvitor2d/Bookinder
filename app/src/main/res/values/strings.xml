@@ -7,7 +7,19 @@
     <string name="bookinder">Bookinder</string>
     <string name="open_drawer">Abrir</string>
     <string name="close_drawer">Fechar</string>
-    <string name="registration">Registration</string>
+    <string name="registration">Cadastrar</string>
     <string name="type_your_name">Name</string>
-    <string name="register">Register</string>
+    <string name="title_activity_book_register">BookRegister</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="book_register">Cadastro do livro</string>
+    <string name="book_title">Título</string>
+    <string name="book_author">Autor(a)</string>
+    <string name="book_synopsis">Sinopse</string>
 </resources>

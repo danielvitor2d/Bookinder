@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1325" />
         <entry key="app/src/main/res/drawable/ic_logo__tinderbook.xml" value="0.1535" />
         <entry key="app/src/main/res/drawable/rounded_edittext.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/activity_book_register.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_feedback.xml" value="0.28102564102564104" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.1" />

@@ -12,11 +12,6 @@ import com.mobile.bookinder.screens.sign_up.SignUpActivity
 
 class SignInActivity : AppCompatActivity() {
 
-  private val users: MutableList<User> = mutableListOf(
-    User("danielvitor.p1@gmail.com", "daniel123"),
-    User("teste", "teste")
-  )
-
   private lateinit var binding: ActivitySignInBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +36,10 @@ class SignInActivity : AppCompatActivity() {
       val fieldPassword = binding.editTextPassword.text.toString()
 
       val userDao = UserDAO()
-      if(userDao.find(fieldEmail, fieldPassword) is User) {
+      val user = userDao.find(fieldEmail, fieldPassword)
+      if(user is User) {
         val intent = Intent(this, Home::class.java)
+        intent.putExtra("user_id", user.user_id)
         startActivity(intent)
         finish()
       }else{

@@ -3,8 +3,6 @@ package com.mobile.bookinder.screens.sign_up
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import android.widget.Toolbar
 import com.google.android.material.snackbar.Snackbar
 import com.mobile.bookinder.common.User
 import com.mobile.bookinder.databinding.ActivitySignUpBinding
@@ -24,17 +22,18 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun setUpListeners() {
-        //Botão de Login
         binding.register.setOnClickListener {
             val fieldName = binding.editTextName.text.toString()
             val fieldEmail = binding.editTextEmail.text.toString()
             val fieldPassword = binding.editTextPassword.text.toString()
 
-            val user = User(fieldEmail, fieldPassword)
             val userDao = UserDAO()
+            val id = userDao.newId()
+            val user = User(id, fieldName, fieldEmail, fieldPassword)
 
             if (userDao.insert(user)){
                 val intent = Intent(this, Home::class.java)
+                intent.putExtra("user_id", user.user_id)
                 startActivity(intent)
                 finish()
             }else{
