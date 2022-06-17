@@ -55,7 +55,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintEnd_toStartOf="@+id/imageButtonRemoveBook"
                 app:layout_constraintStart_toEndOf="@+id/cardView"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -71,12 +71,12 @@
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintEnd_toStartOf="@+id/imageButtonRemoveBook"
                 app:layout_constraintStart_toEndOf="@+id/cardView"
                 app:layout_constraintTop_toBottomOf="@+id/likeMessage" />
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/imageButtonRemoveBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
