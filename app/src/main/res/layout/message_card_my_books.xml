@@ -46,7 +46,7 @@
             </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/likeMessage"
+                android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -60,7 +60,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/messageDiscipline"
+                android:id="@+id/author"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -73,7 +73,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/imageButtonRemoveBook"
                 app:layout_constraintStart_toEndOf="@+id/cardView"
-                app:layout_constraintTop_toBottomOf="@+id/likeMessage" />
+                app:layout_constraintTop_toBottomOf="@+id/title" />
 
             <ImageButton
                 android:id="@+id/imageButtonRemoveBook"

@@ -10,6 +10,6 @@ class Book(
   var owner: UUID?,
   var photos: MutableList<UUID>?
 ) {
-  constructor(_book_id: UUID?, _title: String, _owner: UUID?) :
-    this(_book_id, _title, null, null, _owner, null)
+  constructor(_book_id: UUID?, _title: String, _author: String, _synopsis: String, _owner: UUID?) :
+    this(_book_id, _title, _author, _synopsis, _owner, null)
 }

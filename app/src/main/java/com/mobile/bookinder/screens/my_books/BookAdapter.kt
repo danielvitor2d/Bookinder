@@ -7,29 +7,15 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
+import com.mobile.bookinder.common.model.Book
 
-class BookAdapter(private val clickListener: (String, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
-  private val books: MutableList<String> =
-    mutableListOf(
-      "Livro: As aventuras de Al Samir",
-      "Livro: Fomin",
-      "Livro: A culpa é das estrelas",
-      "Livro: O homem de giz",
-      "Livro: Nárnia",
-      "Livro: As aventuras de Al Samir",
-      "Livro: Fomin",
-      "Livro: A culpa é das estrelas",
-      "Livro: O homem de giz",
-      "Livro: Nárnia",
-      "Livro: As aventuras de Al Samir",
-      "Livro: Fomin",
-      "Livro: A culpa é das estrelas",
-      "Livro: O homem de giz",
-      "Livro: Nárnia")
+class BookAdapter(private val books: MutableList<Book>, private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
+  public fun removeItem(positionBook: Int) {
+    notifyItemRemoved(positionBook)
+  }
 
-  public fun removeItem(position: Int) {
-    books.removeAt(position)
-    notifyItemRemoved(position)
+  public fun updateAll(){
+    notifyDataSetChanged()
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
@@ -42,7 +28,8 @@ class BookAdapter(private val clickListener: (String, Int) -> Unit): RecyclerVie
   }
 
   override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-    holder.bookMessage.text = books[position]
+    holder.bookMessage.text = "Livro: ${books[position].title}"
+    holder.messageDiscipline.text = "Autor(a): ${books[position].author}"
   }
 
   override fun getItemCount(): Int {
@@ -50,7 +37,8 @@ class BookAdapter(private val clickListener: (String, Int) -> Unit): RecyclerVie
   }
 
   class MessageViewHolder(itemView: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(itemView) {
-    val bookMessage: TextView = itemView.findViewById(R.id.likeMessage)
+    val bookMessage: TextView = itemView.findViewById(R.id.title)
+    val messageDiscipline: TextView = itemView.findViewById(R.id.author)
 
     init {
       itemView.findViewById<ImageButton>(R.id.imageButtonRemoveBook).setOnClickListener {

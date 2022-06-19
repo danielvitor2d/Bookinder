@@ -22,6 +22,18 @@ class UserDAO {
     return null
   }
 
+  fun insertBook(user: User, book_id: UUID?): Boolean{
+    val bookDAO = BookDAO()
+    if (bookDAO.findId(book_id) != null) {
+      return false
+    }
+    if (book_id != null) {
+      user.books?.add(book_id)
+    }
+    return true
+
+  }
+
   fun setUser(user_id: UUID?, _user: User) {
     for (i in 0 until userList.size) {
       if (userList[i].user_id == user_id) {
