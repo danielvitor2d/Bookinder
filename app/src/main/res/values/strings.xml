@@ -4,7 +4,7 @@
     <string name="bookinder">Bookinder</string>
     <string name="open_drawer">Abrir</string>
     <string name="close_drawer">Fechar</string>
-    <string name="registration">Registration</string>
-    <string name="type_your_name">Name</string>
-    <string name="register">Register</string>
+    <string name="type_your_name">Nome</string>
+    <string name="register">Cadastrar</string>
+    <string name="register_book">Cadastro de livro</string>
 </resources>
