@@ -41,9 +41,7 @@ class MyBooksFragment: Fragment() {
     val books = bookDao.all()
 
     bookAdapter = BookAdapter(books) { book, _ ->
-      val adapter = itemList.adapter
-      if (adapter !is BookAdapter) return@BookAdapter
-      actionRemoveBook(binding.root.context, adapter, book)
+      actionRemoveBook(binding.root.context, bookAdapter, book)
     }
 
     itemList.adapter = bookAdapter
@@ -59,12 +57,12 @@ class MyBooksFragment: Fragment() {
     bookAdapter?.updateAll()
   }
 
-  private fun actionRemoveBook(context: Context, bookAdapter: BookAdapter, book: Book) {
+  private fun actionRemoveBook(context: Context, bookAdapter: BookAdapter?, book: Book) {
     val alertDialogBuilder = AlertDialog.Builder(context)
-    alertDialogBuilder.setTitle("Deseja remover o livro $book?")
+    alertDialogBuilder.setTitle("Deseja remover o livro ${book.title}?")
     alertDialogBuilder.setPositiveButton("Sim") { dialog, _ ->
       bookDao.removeBook(book, loggedUser.getUser())
-      bookAdapter.removeItem(bookDao.positionBook(book))
+      bookAdapter?.removeItem(bookDao.positionBook(book))
       dialog.dismiss()
     }
     alertDialogBuilder.setNegativeButton("Não") { dialog, _ ->

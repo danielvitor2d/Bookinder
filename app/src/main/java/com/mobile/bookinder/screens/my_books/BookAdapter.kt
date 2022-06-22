@@ -10,13 +10,11 @@ import com.mobile.bookinder.R
 import com.mobile.bookinder.common.model.Book
 
 class BookAdapter(private val books: MutableList<Book>, private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
-  public fun removeItem(positionBook: Int) {
+  fun removeItem(positionBook: Int) {
     notifyItemRemoved(positionBook)
   }
 
-  public fun updateAll(){
-    notifyDataSetChanged()
-  }
+  fun updateAll() = notifyDataSetChanged()
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
     val card = LayoutInflater
@@ -28,8 +26,8 @@ class BookAdapter(private val books: MutableList<Book>, private val clickListene
   }
 
   override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-    holder.bookMessage.text = "Livro: ${books[position].title}"
-    holder.messageDiscipline.text = "Autor(a): ${books[position].author}"
+    "Livro: ${books[position].title}".also { holder.bookMessage.text = it }
+    "Autor(a): ${books[position].author}".also { holder.messageDiscipline.text = it }
   }
 
   override fun getItemCount(): Int {
