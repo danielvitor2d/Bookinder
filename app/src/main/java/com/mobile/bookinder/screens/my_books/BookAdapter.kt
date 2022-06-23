@@ -7,15 +7,23 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
+import com.mobile.bookinder.common.dao.BookDAO
 import com.mobile.bookinder.common.model.Book
+import com.mobile.bookinder.common.model.LoggedUser
 
-class BookAdapter(private val books: MutableList<Book>, private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
+class BookAdapter(private var books: MutableList<Book>, private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
+  private val bookDao = BookDAO()
+  private val loggedUser = LoggedUser()
+
   fun removeItem(positionBook: Int) {
     books.removeAt(positionBook)
     notifyItemRemoved(positionBook)
   }
 
-  fun updateAll() = notifyDataSetChanged()
+  fun updateAll() {
+    books = bookDao.allByUser(loggedUser.getUser()?.user_id)
+    notifyDataSetChanged()
+  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
     val card = LayoutInflater
