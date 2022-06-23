@@ -11,6 +11,7 @@ import com.mobile.bookinder.common.model.Book
 
 class BookAdapter(private val books: MutableList<Book>, private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
   fun removeItem(positionBook: Int) {
+    books.removeAt(positionBook)
     notifyItemRemoved(positionBook)
   }
 

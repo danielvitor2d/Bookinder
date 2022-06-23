@@ -8,17 +8,22 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
+import com.mobile.bookinder.common.dao.BookDAO
+import com.mobile.bookinder.common.dao.LikeDAO
+import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.databinding.FragmentLikesBinding
 
 class LikesFragment: Fragment() {
   private var _binding: FragmentLikesBinding? = null
   private val binding get() = _binding!!
+  private val likeDao = LikeDAO()
+  private val loggedUser = LoggedUser()
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
     _binding = FragmentLikesBinding.inflate(inflater, container, false)
     setUpRecyclerView(binding.root)
     return binding.root
@@ -27,7 +32,10 @@ class LikesFragment: Fragment() {
   private fun setUpRecyclerView(view: View) {
     val likesList = view.findViewById<RecyclerView>(R.id.matchesList)
     likesList.layoutManager = LinearLayoutManager(view.context)
-    likesList.adapter = LikeAdapter()
+
+    val likes = likeDao.allByUser(loggedUser.getUser()?.user_id)
+
+    likesList.adapter = LikeAdapter(likes)
   }
 
   override fun onDestroyView(){

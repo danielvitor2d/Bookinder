@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +20,7 @@ import com.mobile.bookinder.databinding.FragmentMyBooksBinding
 class MyBooksFragment: Fragment() {
   private var _binding: FragmentMyBooksBinding? = null
   private val binding get() = _binding!!
-  private var bookAdapter: BookAdapter? = null
+  private lateinit var bookAdapter: BookAdapter
   private val bookDao = BookDAO()
   private val loggedUser = LoggedUser()
 
@@ -38,10 +39,10 @@ class MyBooksFragment: Fragment() {
     val itemList = view.findViewById<RecyclerView>(R.id.itemListMyBooks)
     itemList.layoutManager = LinearLayoutManager(view.context)
 
-    val books = bookDao.all()
+    val books = bookDao.allByUser(loggedUser.getUser()?.user_id)
 
-    bookAdapter = BookAdapter(books) { book, _ ->
-      actionRemoveBook(binding.root.context, bookAdapter, book)
+    bookAdapter = BookAdapter(books) { book, pos ->
+      actionRemoveBook(binding.root.context, book, pos)
     }
 
     itemList.adapter = bookAdapter
@@ -54,15 +55,15 @@ class MyBooksFragment: Fragment() {
 
   override fun onResume() {
     super.onResume()
-    bookAdapter?.updateAll()
+    bookAdapter.updateAll()
   }
 
-  private fun actionRemoveBook(context: Context, bookAdapter: BookAdapter?, book: Book) {
+  private fun actionRemoveBook(context: Context, book: Book, pos: Int) {
     val alertDialogBuilder = AlertDialog.Builder(context)
     alertDialogBuilder.setTitle("Deseja remover o livro ${book.title}?")
     alertDialogBuilder.setPositiveButton("Sim") { dialog, _ ->
       bookDao.removeBook(book, loggedUser.getUser())
-      bookAdapter?.removeItem(bookDao.positionBook(book))
+      bookAdapter.removeItem(pos)
       dialog.dismiss()
     }
     alertDialogBuilder.setNegativeButton("Não") { dialog, _ ->

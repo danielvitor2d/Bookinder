@@ -36,6 +36,6 @@ class BookAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
   }
 
   class MessageViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-    val bookMessage: TextView = itemView.findViewById(R.id.likeMessage)
+    val bookMessage: TextView = itemView.findViewById(R.id.textViewLikeMessageOne)
   }
 }
