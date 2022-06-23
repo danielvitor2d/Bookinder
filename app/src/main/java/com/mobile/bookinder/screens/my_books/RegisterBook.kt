@@ -1,28 +1,46 @@
 package com.mobile.bookinder.screens.my_books
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.mobile.bookinder.common.dao.BookDAO
-import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.databinding.ActivityRegisterBookBinding
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RegisterBook : AppCompatActivity() {
 
   private lateinit var binding: ActivityRegisterBookBinding
   private val loggedUser = LoggedUser()
+  private var currentImages: MutableList<Uri> = ArrayList(0)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     binding = ActivityRegisterBookBinding.inflate(layoutInflater)
     setContentView(binding.root)
-    setUpListeners();
+    setUpListeners()
   }
 
   private fun setUpListeners() {
+    val getImage = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){
+      currentImages = it
+
+      var text = ""
+      for(uri in currentImages){
+        text += "- ${uri}\n"
+      }
+
+      binding.tvImageList.text = text
+    }
+
+    binding.addImage.setOnClickListener {
+      getImage.launch("image/*")
+    }
     binding.register.setOnClickListener {
       val fieldTitle = binding.editTextTitle.text.toString()
       val fieldAuthor = binding.editTextAuthor.text.toString()
@@ -39,7 +57,6 @@ class RegisterBook : AppCompatActivity() {
       }else{
         Toast.makeText(this, "Preencha os campos obrigatórios", Toast.LENGTH_LONG).show()
       }
-
     }
   }
 
@@ -48,6 +65,5 @@ class RegisterBook : AppCompatActivity() {
       return false
     }
     return true
-
   }
 }

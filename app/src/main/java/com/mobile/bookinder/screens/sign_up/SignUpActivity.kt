@@ -3,6 +3,7 @@ package com.mobile.bookinder.screens.sign_up
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.databinding.ActivitySignUpBinding
 import com.mobile.bookinder.common.dao.UserDAO
@@ -19,6 +20,7 @@ class SignUpActivity : AppCompatActivity() {
   }
 
   private fun setUpListeners() {
+
     binding.register.setOnClickListener {
       val fieldName = binding.editTextName.text.toString()
       val fieldEmail = binding.editTextEmail.text.toString()

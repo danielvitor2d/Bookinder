@@ -4,5 +4,5 @@ import java.util.*
 
 class Photo(
   var photo_id: UUID?,
-  var url: String
+  var path: String
 ) {}

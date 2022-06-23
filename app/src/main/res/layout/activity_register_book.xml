@@ -123,25 +123,40 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView_registration"
+    <Button
+        android:id="@+id/addImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
+        android:text="@string/add_image"
+        android:textStyle="bold"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/synopsisLayout">
+        app:layout_constraintTop_toBottomOf="@+id/synopsisLayout" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/register"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/blue_grotto"
-            android:text="@string/register"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
-    </androidx.cardview.widget.CardView>
+    <Button
+        android:id="@+id/register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvImageList" />
 
+    <TextView
+        android:id="@+id/tvImageList"
+        android:layout_width="376dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addImage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

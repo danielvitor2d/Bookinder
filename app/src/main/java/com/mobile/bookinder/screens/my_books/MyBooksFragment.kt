@@ -44,13 +44,16 @@ class MyBooksFragment: Fragment() {
       val adapter = itemList.adapter
       if (adapter !is BookAdapter) return@BookAdapter
       actionRemoveBook(binding.root.context, adapter, book)
+      itemList.setOnClickListener {
+        openBookPage(book)
+      }
     }
 
     itemList.adapter = bookAdapter
 
     binding.register.setOnClickListener {
       val intent = Intent(this.context, RegisterBook::class.java)
-      startActivity(intent)
+      startActivity(intent);
     }
   }
 
@@ -71,6 +74,15 @@ class MyBooksFragment: Fragment() {
       dialog.dismiss()
     }
     alertDialogBuilder.show()
+  }
+
+  private fun openBookPage(book: Book){
+    val bundle = Bundle()
+    bundle.putString("book", book.book_id.toString())
+    val intent = Intent(context, BookActivity::class.java)
+    intent.putExtras(bundle)
+    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    startActivity(intent)
   }
 
   override fun onDestroyView(){

@@ -2,6 +2,7 @@ package com.mobile.bookinder.screens.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -19,6 +20,7 @@ import com.mobile.bookinder.screens.my_books.MyBooksFragment
 import com.mobile.bookinder.screens.profile.ProfileFragment
 import com.mobile.bookinder.screens.settings.SettingsFragment
 import com.mobile.bookinder.screens.sign_in.SignInActivity
+import java.util.logging.Logger
 
 class HomeActivity: AppCompatActivity() {
   lateinit var drawerLayout: DrawerLayout
@@ -29,6 +31,7 @@ class HomeActivity: AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    
     binding = ActivityHomeBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
@@ -106,7 +109,17 @@ class HomeActivity: AppCompatActivity() {
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
-      super.onBackPressed()
+      val currentFragment =  supportFragmentManager.findFragmentById(R.id.fragment_container)
+      if (currentFragment is FeedFragment) {
+        super.onBackPressed()
+      }else{
+        supportActionBar?.title = "Feed"
+        drawerLayout.closeDrawer(GravityCompat.START)
+        supportFragmentManager.beginTransaction().replace(
+          R.id.fragment_container,
+          FeedFragment()
+        ).commit()
+      }
     }
   }
 
