@@ -42,6 +42,7 @@ class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.
   }
 
   class MessageViewHolder(itemView: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(itemView) {
+    private var toggleLiked = true
     val bookTitle: TextView = itemView.findViewById(R.id.title)
     val bookAuthor: TextView = itemView.findViewById(R.id.author)
     private val imageButtonLikeBook: ImageView = itemView.findViewById(R.id.imageButtonLikeBook)
@@ -49,6 +50,9 @@ class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.
     init {
       imageButtonLikeBook.setOnClickListener {
         clickAtPosition(adapterPosition)
+        if (toggleLiked) imageButtonLikeBook.setImageResource(R.drawable.ic_filled_star)
+        else imageButtonLikeBook.setImageResource(R.drawable.ic_star)
+        toggleLiked = !toggleLiked
       }
     }
   }
