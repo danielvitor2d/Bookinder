@@ -1,5 +1,6 @@
 package com.mobile.bookinder.common.dao
 
+import android.util.Log
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.User
 import java.util.*

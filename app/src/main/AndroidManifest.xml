@@ -38,10 +38,11 @@
             android:exported="false" />
         <activity
             android:name=".screens.my_books.RegisterBook"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".screens.my_books.BookActivity"
+            android:exported="false">
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
