@@ -1,6 +1,7 @@
 package com.mobile.bookinder.screens.profile
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.mobile.bookinder.R
 import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.databinding.FragmentProfileBinding
+import com.mobile.bookinder.screens.feedback.Feedback
 import com.mobile.bookinder.screens.home.HomeActivity
 
 class ProfileFragment: Fragment() {
@@ -25,6 +27,7 @@ class ProfileFragment: Fragment() {
   private lateinit var profileLastNameUser: EditText
   private lateinit var profileEmailUser: EditText
   private lateinit var profileSaveButton: AppCompatButton
+  private lateinit var goToFeedbackButton: AppCompatButton
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -50,26 +53,27 @@ class ProfileFragment: Fragment() {
     profileLastNameUser = binding.profileLastNameUser
     profileEmailUser = binding.profileEmailUser
     profileSaveButton = binding.profileSaveButton
+    goToFeedbackButton = binding.goToFeedbackButton
   }
 
   private fun setUpLoggedUser() {
     val user = LoggedUser.user
-    profileFirstNameUser?.setText(user?.firstname)
-    profileLastNameUser?.setText(user?.lastname)
-    profileEmailUser?.setText(user?.email)
+    profileFirstNameUser.setText(user?.firstname)
+    profileLastNameUser.setText(user?.lastname)
+    profileEmailUser.setText(user?.email)
   }
 
   private fun setUpListeners(context: Context) {
-    profileSaveButton?.setOnClickListener {
-      val firstname = profileFirstNameUser?.text.toString()
-      val lastname = profileLastNameUser?.text.toString()
-      val email = profileEmailUser?.text.toString()
+    profileSaveButton.setOnClickListener {
+      val firstname = profileFirstNameUser.text.toString()
+      val lastname = profileLastNameUser.text.toString()
+      val email = profileEmailUser.text.toString()
       if (firstname.isEmpty() || lastname.isEmpty() || email.isEmpty()) {
         Toast.makeText(context, "Preencha os campos", Toast.LENGTH_LONG).show()
         return@setOnClickListener
       }
 
-      var user = LoggedUser.user
+      val user = LoggedUser.user
       if (user != null) {
         user.firstname = firstname
         user.lastname = lastname
@@ -82,6 +86,10 @@ class ProfileFragment: Fragment() {
 
         updateHeader()
       }
+    }
+    goToFeedbackButton.setOnClickListener {
+      val intent = Intent(context, Feedback::class.java)
+      startActivity(intent)
     }
   }
 

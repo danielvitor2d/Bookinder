@@ -6,7 +6,7 @@ import java.util.*
 
 class BookDAO {
 
-  fun insert(new_book: Book, user: User): Boolean{
+  fun insert(new_book: Book, user: User?): Boolean{
     val userDAO = UserDAO()
     for (book in bookList) {
       if (new_book.book_id == book.book_id)
@@ -27,6 +27,15 @@ class BookDAO {
     return findBooks
   }
 
+  fun remove(id: UUID?): Boolean {
+    val book = findId(id)
+    if (book != null) {
+      bookList.remove(book)
+      return true
+    }
+    return false
+  }
+
   fun findId(id: UUID?): Book?{
     for (book in bookList) {
       if (book.book_id == id)
@@ -35,21 +44,21 @@ class BookDAO {
     return null
   }
 
-  fun removeBook(book: Book, user: User?): Boolean{
-    val book = findId(book.book_id)
-    if (book != null && user != null){
-      user.books?.remove(book.book_id)
+  fun removeBook(_book: Book, user: User?): Boolean{
+    val book = findId(_book.book_id)
+    if (book !== null && user !== null){
+      user.books?.remove(_book.book_id)
       bookList.remove(book)
       return true
     }
     return false
   }
 
-  fun allByUser(user_id: UUID): MutableList<Book>{
+  fun allByUser(user_id: UUID?): MutableList<Book>{
     return bookList.filter { it.owner == user_id } as MutableList<Book>
   }
 
-  fun positionBook(book: Book): Int{
+  fun positionBook(book: Book): Int {
     return bookList.indexOf(book)
   }
 

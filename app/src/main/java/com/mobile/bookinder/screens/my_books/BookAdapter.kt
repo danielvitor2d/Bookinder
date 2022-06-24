@@ -7,18 +7,31 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
+import com.mobile.bookinder.common.dao.BookDAO
 import com.mobile.bookinder.common.model.Book
+import com.mobile.bookinder.common.model.LoggedUser
 
-class BookAdapter(private val books: MutableList<Book>, private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
-  public fun removeItem(positionBook: Int) {
-    notifyItemRemoved(positionBook)
+class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
+  private val bookDao = BookDAO()
+  private var books: MutableList<Book> = mutableListOf()
+  private val loggedUser = LoggedUser()
+
+  fun removeItem(positionBook: Int) {
+    if (positionBook >= books.size) return
+    val book = books[positionBook]
+    if (bookDao.remove(book.book_id)) {
+      books.removeAt(positionBook)
+      notifyItemRemoved(positionBook)
+    }
   }
 
-  public fun updateAll(){
+  fun updateAll() {
+    books = bookDao.allByUser(loggedUser.getUser()?.user_id)
     notifyDataSetChanged()
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
+    books = bookDao.allByUser(loggedUser.getUser()?.user_id)
     val card = LayoutInflater
       .from(parent.context)
       .inflate(R.layout.message_card_my_books, parent, false)
@@ -28,8 +41,8 @@ class BookAdapter(private val books: MutableList<Book>, private val clickListene
   }
 
   override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-    holder.bookMessage.text = "Livro: ${books[position].title}"
-    holder.messageDiscipline.text = "Autor(a): ${books[position].author}"
+    "Livro: ${books[position].title}".also { holder.bookTitle.text = it }
+    "Autor(a): ${books[position].author}".also { holder.bookAuthor.text = it }
   }
 
   override fun getItemCount(): Int {
@@ -37,8 +50,8 @@ class BookAdapter(private val books: MutableList<Book>, private val clickListene
   }
 
   class MessageViewHolder(itemView: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(itemView) {
-    val bookMessage: TextView = itemView.findViewById(R.id.title)
-    val messageDiscipline: TextView = itemView.findViewById(R.id.author)
+    val bookTitle: TextView = itemView.findViewById(R.id.title)
+    val bookAuthor: TextView = itemView.findViewById(R.id.author)
 
     init {
       itemView.findViewById<ImageButton>(R.id.imageButtonRemoveBook).setOnClickListener {

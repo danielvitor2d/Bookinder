@@ -31,15 +31,14 @@ class RegisterBook : AppCompatActivity() {
       val check = fieldChecklist(fieldTitle, fieldAuthor, fieldSynopsis)
 
       if (user != null && check) {
-        val book = Book(UUID.randomUUID(), fieldTitle, fieldAuthor, fieldSynopsis, user?.user_id)
+        val book = Book(UUID.randomUUID(), fieldTitle, fieldAuthor, fieldSynopsis, user.user_id)
         val bookDAO = BookDAO()
         bookDAO.insert(book, user)
         Toast.makeText(this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show()
         finish()
-      }else{
+      } else{
         Toast.makeText(this, "Preencha os campos obrigatórios", Toast.LENGTH_LONG).show()
       }
-
     }
   }
 
