@@ -21,8 +21,6 @@ class MyBooksFragment: Fragment() {
   private var _binding: FragmentMyBooksBinding? = null
   private val binding get() = _binding!!
   private lateinit var bookAdapter: BookAdapter
-  private val bookDao = BookDAO()
-  private val loggedUser = LoggedUser()
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -61,6 +59,7 @@ class MyBooksFragment: Fragment() {
     alertDialogBuilder.setTitle("Deseja remover o livro ${book.title}?")
     alertDialogBuilder.setPositiveButton("Sim") { dialog, _ ->
       bookAdapter.removeItem(pos)
+      Toast.makeText(context, "Livro removido com sucesso!", Toast.LENGTH_SHORT).show()
       dialog.dismiss()
     }
     alertDialogBuilder.setNegativeButton("Não") { dialog, _ ->

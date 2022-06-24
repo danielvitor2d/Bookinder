@@ -41,8 +41,8 @@ class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.
   }
 
   override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-    "Livro: ${books[position].title}".also { holder.bookMessage.text = it }
-    "Autor(a): ${books[position].author}".also { holder.messageDiscipline.text = it }
+    "Livro: ${books[position].title}".also { holder.bookTitle.text = it }
+    "Autor(a): ${books[position].author}".also { holder.bookAuthor.text = it }
   }
 
   override fun getItemCount(): Int {
@@ -50,8 +50,8 @@ class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.
   }
 
   class MessageViewHolder(itemView: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(itemView) {
-    val bookMessage: TextView = itemView.findViewById(R.id.title)
-    val messageDiscipline: TextView = itemView.findViewById(R.id.author)
+    val bookTitle: TextView = itemView.findViewById(R.id.title)
+    val bookAuthor: TextView = itemView.findViewById(R.id.author)
 
     init {
       itemView.findViewById<ImageButton>(R.id.imageButtonRemoveBook).setOnClickListener {
