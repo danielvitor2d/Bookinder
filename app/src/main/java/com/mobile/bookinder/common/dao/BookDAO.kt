@@ -27,6 +27,15 @@ class BookDAO {
     return findBooks
   }
 
+  fun remove(id: UUID?): Boolean {
+    val book = findId(id)
+    if (book != null) {
+      bookList.remove(book)
+      return true
+    }
+    return false
+  }
+
   fun findId(id: UUID?): Book?{
     for (book in bookList) {
       if (book.book_id == id)

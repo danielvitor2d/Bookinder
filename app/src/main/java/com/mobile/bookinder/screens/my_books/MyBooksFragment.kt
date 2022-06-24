@@ -39,9 +39,7 @@ class MyBooksFragment: Fragment() {
     val itemList = view.findViewById<RecyclerView>(R.id.itemListMyBooks)
     itemList.layoutManager = LinearLayoutManager(view.context)
 
-    val books = bookDao.allByUser(loggedUser.getUser()?.user_id)
-
-    bookAdapter = BookAdapter(books) { book, pos ->
+    bookAdapter = BookAdapter() { book, pos ->
       actionRemoveBook(binding.root.context, book, pos)
     }
 
@@ -62,7 +60,6 @@ class MyBooksFragment: Fragment() {
     val alertDialogBuilder = AlertDialog.Builder(context)
     alertDialogBuilder.setTitle("Deseja remover o livro ${book.title}?")
     alertDialogBuilder.setPositiveButton("Sim") { dialog, _ ->
-      bookDao.removeBook(book, loggedUser.getUser())
       bookAdapter.removeItem(pos)
       dialog.dismiss()
     }

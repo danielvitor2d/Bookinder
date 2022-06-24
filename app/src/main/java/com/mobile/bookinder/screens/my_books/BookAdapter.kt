@@ -11,13 +11,18 @@ import com.mobile.bookinder.common.dao.BookDAO
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.LoggedUser
 
-class BookAdapter(private var books: MutableList<Book>, private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
+class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
   private val bookDao = BookDAO()
+  private var books: MutableList<Book> = mutableListOf()
   private val loggedUser = LoggedUser()
 
   fun removeItem(positionBook: Int) {
-    books.removeAt(positionBook)
-    notifyItemRemoved(positionBook)
+    if (positionBook >= books.size) return
+    val book = books[positionBook]
+    if (bookDao.remove(book.book_id)) {
+      books.removeAt(positionBook)
+      notifyItemRemoved(positionBook)
+    }
   }
 
   fun updateAll() {
@@ -26,6 +31,7 @@ class BookAdapter(private var books: MutableList<Book>, private val clickListene
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
+    books = bookDao.allByUser(loggedUser.getUser()?.user_id)
     val card = LayoutInflater
       .from(parent.context)
       .inflate(R.layout.message_card_my_books, parent, false)
