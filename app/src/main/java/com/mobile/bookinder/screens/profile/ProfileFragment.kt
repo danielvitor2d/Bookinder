@@ -104,13 +104,15 @@ class ProfileFragment: Fragment() {
         user.lastname = lastname
         user.email = email
 
+        Toast.makeText(context, "cheguei só até aqui", Toast.LENGTH_LONG).show()
+
         val photo = photoDAO.findById(user.photo_id)
         if(uriPath.getPath(context, photoPerfil as Uri) != photo?.path){
           if(photo != null){
-            Toast.makeText(context, "O usuário já tinha uma foto", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "O usuário já tinha uma foto", Toast.LENGTH_LONG).show()
             photoDAO.remove(photo, user)
           }
-          Toast.makeText(context, "Agora ele tem uma nova", Toast.LENGTH_SHORT).show()
+          Toast.makeText(context, "Agora ele tem uma nova", Toast.LENGTH_LONG).show()
           photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(context, photoPerfil as Uri).toString()), user)
         }
 

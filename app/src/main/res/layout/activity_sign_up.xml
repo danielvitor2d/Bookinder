@@ -67,7 +67,7 @@
     <Button
         android:id="@+id/buttonAddPhoto"
         android:layout_width="254dp"
-        android:layout_height="41dp"
+        android:layout_height="45dp"
         android:backgroundTint="#d3d3d3"
         android:text="Adicionar foto do perfil"
         android:textColor="@color/navy_blue"
