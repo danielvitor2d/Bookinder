@@ -59,8 +59,9 @@ class BookDAO {
     return bookList.filter { it.owner == user_id } as MutableList<Book>
   }
 
-  fun positionBook(book: Book): Int{
-    return bookList.indexOf(book)
+  fun addPhoto(book_id: UUID, photo_id: UUID){
+    val book = findId(book_id)
+    book?.photos?.add(photo_id)
   }
 
   fun all(): MutableList<Book>{

@@ -25,7 +25,7 @@ class SignInActivity : AppCompatActivity() {
     setContentView(binding.root)
 
     userDAO.insert(User(UUID.randomUUID(), "Daniel", "daniel", "daniel"))
-    userDAO.insert(User(UUID.randomUUID(), "p", "p", "p"))
+    userDAO.insert(User(UUID.randomUUID(), "", "", ""))
 
     setUpListeners()
   }
