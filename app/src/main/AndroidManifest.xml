@@ -38,6 +38,9 @@
             android:name=".screens.feedback.Feedback"
             android:exported="false" />
         <activity
+            android:name=".screens.match.Match"
+            android:exported="false" />
+        <activity
             android:name=".screens.my_books.RegisterBook"
             android:exported="false">
         </activity>

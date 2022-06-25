@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background2"
     tools:context=".screens.my_books.RegisterBook">
 
     <androidx.cardview.widget.CardView
@@ -24,7 +25,7 @@
             android:layout_gravity="center_horizontal">
 
             <ImageView
-                android:id="@+id/imageView6"
+                android:id="@+id/logo_icon"
                 android:layout_width="52dp"
                 android:layout_height="39dp"
                 android:layout_marginTop="10dp"
@@ -34,7 +35,7 @@
                 app:srcCompat="@drawable/ic_logo__tinderbook2" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/textApp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
@@ -42,7 +43,7 @@
                 android:text="@string/bookinder"
                 android:textColor="@color/navy_blue"
                 android:textSize="30dp"
-                app:layout_constraintStart_toEndOf="@+id/imageView6"
+                app:layout_constraintStart_toEndOf="@+id/logo_icon"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -54,54 +55,56 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="200dp"
-        android:text="@string/register_book"
         android:textColor="@color/navy_blue"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:text="@string/register_book"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardTitle" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/titleLayout"
-        style="@style/SignUpTextInputInnerFieldStyle"
+        style="@style/TextInputOuterFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="15dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
-        app:boxBackgroundColor="@color/white"
-        app:hintTextColor="@color/black"
+        app:boxStrokeColor="@color/navy_blue"
+        app:hintTextColor="@color/navy_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textFunction">
+        app:layout_constraintTop_toBottomOf="@+id/textFunction">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextTitle"
             style="@style/SignUpTextInputInnerFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoSizeTextType="uniform"
-            android:maxLength="50"
             android:hint="Título*"
-            android:inputType="text" />
+            android:inputType="text|textCapSentences"
+            android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/authorLayout"
-        style="@style/SignUpTextInputInnerFieldStyle"
+        style="@style/TextInputOuterFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="15dp"
+        app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
-        app:boxBackgroundColor="@color/white"
-        app:hintTextColor="@color/black"
+        app:boxStrokeColor="@color/navy_blue"
+        app:hintTextColor="@color/navy_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,13 +112,12 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextAuthor"
-            style="@style/SignUpTextInputInnerFieldStyle"
+            style="@style/TextInputInnerFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoSizeTextType="uniform"
-            android:maxLength="30"
             android:hint="Autor(a)*"
-            android:inputType="text" />
+            android:inputType="text|textCapWords"
+            android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -147,32 +149,32 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/synopsisLayout"
-        style="@style/SignUpTextInputInnerFieldStyle"
+        style="@style/MultilineTextInputOuterFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
-        app:hintTextColor="@color/black"
+        app:boxStrokeColor="@color/navy_blue"
+        app:hintTextColor="@color/navy_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinner">
+        app:layout_constraintTop_toBottomOf="@+id/authorLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextSynopsis"
-            style="@style/SignUpTextInputInnerFieldStyle"
+            style="@style/MultilineTextInputInnerFieldStyle"
             android:layout_width="match_parent"
-            android:layout_height="104dp"
-            android:autoSizeTextType="uniform"
+            android:layout_height="100dp"
+            android:gravity="start|top"
             android:hint="Sinopse"
-            android:inputType="text"
-            android:maxLength="200"
-            android:maxLines="5" />
+            android:inputType="textMultiLine"
+            android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -247,7 +249,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@color/navy_blue"
         android:text="@string/register"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -264,5 +269,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardButtonsImages" />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

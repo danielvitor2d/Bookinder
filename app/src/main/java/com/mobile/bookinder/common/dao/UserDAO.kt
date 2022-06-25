@@ -22,13 +22,13 @@ class UserDAO {
     return null
   }
 
-  fun insertBook(user: User, book_id: UUID?): Boolean{
+  fun insertBook(user: User?, book_id: UUID?): Boolean{
     val bookDAO = BookDAO()
     if (bookDAO.findId(book_id) != null) {
       return false
     }
     if (book_id != null) {
-      user.books?.add(book_id)
+      user?.books?.add(book_id)
     }
     return true
 
@@ -41,6 +41,15 @@ class UserDAO {
         return
       }
     }
+  }
+
+  fun getById(user_id: UUID): User? {
+    for (user in userList) {
+      if (user.user_id == user_id) {
+        return user
+      }
+    }
+    return null
   }
 
   companion object {

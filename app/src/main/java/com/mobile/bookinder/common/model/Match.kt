@@ -13,4 +13,6 @@ class Match(
   var feedback_id_01: UUID?,
   var feedback_id_02: UUID?,
   var date: Date
-  ) {}
+  ) {
+
+}

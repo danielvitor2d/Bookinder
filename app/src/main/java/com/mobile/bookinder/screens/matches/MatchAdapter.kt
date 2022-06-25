@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
 
-class MatchAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MatchAdapter(private val clickListener: (String, Int) -> Unit): RecyclerView.Adapter<MatchAdapter.MessageViewHolder>() {
   private val matches: MutableList<String> =
     mutableListOf(
       "Você deu match com Eduardo!",
@@ -17,17 +17,18 @@ class MatchAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
       "Você deu match com Érica!",
       "Você deu match com Vitória!")
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
     val card = LayoutInflater
       .from(parent.context)
       .inflate(R.layout.message_card_matches, parent, false)
-    return MatchAdapter.MessageViewHolder(card)
+    return MessageViewHolder(card) {
+      clickListener(matches[it], it)
+    }
   }
 
-  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-    val currentItem = matches[position]
-    if (holder is MatchAdapter.MessageViewHolder) {
-      holder.matchMessage.text = currentItem
+  override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
+    matches[position].also {
+      holder.matchMessage.text = it
     }
   }
 
@@ -35,7 +36,13 @@ class MatchAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     return matches.size
   }
 
-  class MessageViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+  class MessageViewHolder(itemView: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(itemView) {
     val matchMessage: TextView = itemView.findViewById(R.id.matchMessage)
+
+    init {
+      itemView.setOnClickListener {
+        clickAtPosition(adapterPosition)
+      }
+    }
   }
 }

@@ -3,31 +3,40 @@ package com.mobile.bookinder.screens.likes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
+import com.mobile.bookinder.common.dao.BookDAO
+import com.mobile.bookinder.common.dao.UserDAO
+import com.mobile.bookinder.common.model.Like
+import com.mobile.bookinder.common.model.Util
 
-class LikeAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-  private val likes: MutableList<String> =
-    mutableListOf(
-      "Sabrina curtiu seu livro 'A menina que roubava livros'",
-      "Bruno curtiu seu livro 'Nárnia'",
-      "César curtiu seu livro 'As crônicas de Gelo e Fogo'",
-      "Paula curtiu seu livro 'O menino do pijama listrado'",
-      "Augusto curtiu seu livro 'A revolução dos bixos'",
-      "Natália curtiu seu livro 'O homem de giz'")
+class LikeAdapter(private val likes: MutableList<Like>): RecyclerView.Adapter<LikeAdapter.MessageViewHolder>() {
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
     val card = LayoutInflater
       .from(parent.context)
       .inflate(R.layout.message_card_likes, parent, false)
-    return LikeAdapter.MessageViewHolder(card)
+    return MessageViewHolder(card)
   }
 
-  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-    val currentItem = likes[position]
-    if (holder is LikeAdapter.MessageViewHolder) {
-      holder.likeMessage.text = currentItem
+  override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
+    val userDAO = UserDAO()
+    val bookDAO = BookDAO()
+
+    val userFrom = userDAO.getById(likes[position].user_id_from)
+    val book = bookDAO.findId(likes[position].book_id_to)
+    val formattedDate = Util.getFormattedDate(likes[position].date)
+    val formattedHour = Util.getFormattedHour(likes[position].date)
+
+    "${userFrom?.firstname} curtiu seu livro '${book?.title}'".also { holder.textViewLikeMessageOne.text = it }
+    "Veja se algum dos livros de ${userFrom?.firstname} lhe interessa".also { holder.textViewLikeMessageTwo.text = it }
+    "$formattedHour - $formattedDate".also { holder.textViewLikeDateTime.text = it }
+
+    holder.textViewGoToProfile.setOnClickListener {
+      Toast.makeText(holder.itemView.context, "Indo para perfil de ${userFrom?.firstname}", Toast.LENGTH_SHORT).show()
     }
   }
 
@@ -36,6 +45,9 @@ class LikeAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
   }
 
   class MessageViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-    val likeMessage: TextView = itemView.findViewById(R.id.likeMessage)
+    val textViewLikeDateTime: TextView = itemView.findViewById(R.id.textViewLikeDateTime)
+    val textViewLikeMessageOne: TextView = itemView.findViewById(R.id.textViewLikeMessageOne)
+    val textViewLikeMessageTwo: TextView = itemView.findViewById(R.id.textViewLikeMessageTwo)
+    val textViewGoToProfile: ImageView = itemView.findViewById(R.id.textViewGoToProfile)
   }
 }

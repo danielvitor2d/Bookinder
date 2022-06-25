@@ -33,7 +33,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameLayout"
-        style="@style/SignUpTextInputInnerFieldStyle"
+        style="@style/SignUpTextInputOuterFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -43,7 +43,8 @@
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
         app:boxBackgroundColor="@color/white"
-        app:hintTextColor="@color/black"
+        app:boxStrokeColor="@color/blue_grotto"
+        app:hintTextColor="@color/blue_grotto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +61,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailLayout"
-        style="@style/SignUpTextInputInnerFieldStyle"
+        style="@style/SignUpTextInputOuterFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -70,7 +71,8 @@
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
-        app:hintTextColor="@color/black"
+        app:boxStrokeColor="@color/blue_grotto"
+        app:hintTextColor="@color/blue_grotto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameLayout">
 
@@ -86,7 +88,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordLayout"
-        style="@style/SignUpTextInputInnerFieldStyle"
+        style="@style/SignUpTextInputOuterFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -96,7 +98,8 @@
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
-        app:hintTextColor="@color/black"
+        app:boxStrokeColor="@color/blue_grotto"
+        app:hintTextColor="@color/blue_grotto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailLayout"
         app:passwordToggleEnabled="true">
