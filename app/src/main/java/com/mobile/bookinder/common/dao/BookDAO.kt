@@ -1,12 +1,13 @@
 package com.mobile.bookinder.common.dao
 
+import android.util.Log
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.User
 import java.util.*
 
 class BookDAO {
 
-  fun insert(new_book: Book, user: User?): Boolean{
+  fun insert(new_book: Book, user: User): Boolean{
     val userDAO = UserDAO()
     for (book in bookList) {
       if (new_book.book_id == book.book_id)
@@ -27,15 +28,6 @@ class BookDAO {
     return findBooks
   }
 
-  fun remove(id: UUID?): Boolean {
-    val book = findId(id)
-    if (book != null) {
-      bookList.remove(book)
-      return true
-    }
-    return false
-  }
-
   fun findId(id: UUID?): Book?{
     for (book in bookList) {
       if (book.book_id == id)
@@ -44,10 +36,19 @@ class BookDAO {
     return null
   }
 
-  fun removeBook(_book: Book, user: User?): Boolean{
-    val book = findId(_book.book_id)
-    if (book !== null && user !== null){
-      user.books?.remove(_book.book_id)
+  fun findId(id: String?): Book?{
+    for (book in bookList) {
+      val current_book = book.book_id.toString()
+      if (current_book.equals(id))
+        return book
+    }
+    return null
+  }
+
+  fun removeBook(book: Book, user: User?): Boolean{
+    val book = findId(book.book_id)
+    if (book != null && user != null){
+      user.books?.remove(book.book_id)
       bookList.remove(book)
       return true
     }
@@ -58,8 +59,9 @@ class BookDAO {
     return bookList.filter { it.owner == user_id } as MutableList<Book>
   }
 
-  fun positionBook(book: Book): Int {
-    return bookList.indexOf(book)
+  fun addPhoto(book_id: UUID, photo_id: UUID){
+    val book = findId(book_id)
+    book?.photos?.add(photo_id)
   }
 
   fun all(): MutableList<Book>{

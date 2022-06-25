@@ -7,4 +7,5 @@
     <string name="type_your_name">Nome</string>
     <string name="register">Cadastrar</string>
     <string name="register_book">Cadastro de livro</string>
+    <string name="add_image">Adicionar Images</string>
 </resources>
