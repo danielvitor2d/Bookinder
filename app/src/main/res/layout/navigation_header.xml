@@ -31,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/nav_header_imageView"
+                android:id="@+id/imagePerfil"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:src="@drawable/default_avatar_user" />

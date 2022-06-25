@@ -19,7 +19,7 @@
         <entry key="app/src/main/res/layout/activity_book.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_feedback.xml" value="0.28102564102564104" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.28541666666666665" />
-        <entry key="app/src/main/res/layout/activity_register_book.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_register_book.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_teste.xml" value="0.19375" />
@@ -30,7 +30,7 @@
         <entry key="app/src/main/res/layout/fragment_loans.xml" value="0.284375" />
         <entry key="app/src/main/res/layout/fragment_matches.xml" value="0.28102564102564104" />
         <entry key="app/src/main/res/layout/fragment_my_books.xml" value="0.284375" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.284375" />
         <entry key="app/src/main/res/layout/home.xml" value="0.28541666666666665" />
         <entry key="app/src/main/res/layout/home_toolbar.xml" value="0.28541666666666665" />

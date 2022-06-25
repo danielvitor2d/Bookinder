@@ -2,6 +2,7 @@ package com.mobile.bookinder.common.dao
 
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.Photo
+import com.mobile.bookinder.common.model.User
 import java.util.*
 
 class PhotoDAO {
@@ -18,7 +19,26 @@ class PhotoDAO {
     return true
   }
 
-  fun findById(id: UUID) : Photo?{
+  fun insert(new_photo: Photo, user: User): Boolean{
+    val userDAO = UserDAO()
+    if (userDAO.find(user.user_id)){
+      for (photo in photoList) {
+        if (photo.photo_id == new_photo.photo_id)
+          return false
+      }
+      userDAO.insertPhoto(user, new_photo)
+      photoList.add(new_photo)
+      return true
+    }
+    return false
+  }
+
+  fun remove(photo: Photo, user: User){
+    user.photo_id = null
+    photoList.remove(photo)
+  }
+
+  fun findById(id: UUID?) : Photo?{
     for (photo in photoList) {
       if (photo.photo_id == id)
         return photo

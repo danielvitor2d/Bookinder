@@ -15,6 +15,7 @@ import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.databinding.ActivityRegisterBookBinding
 import com.mobile.bookinder.util.URIPathHelper
+import java.net.URI
 import java.util.*
 
 class RegisterBook : AppCompatActivity() {
@@ -22,6 +23,8 @@ class RegisterBook : AppCompatActivity() {
   private lateinit var binding: ActivityRegisterBookBinding
   private val loggedUser = LoggedUser()
   private var currentImages: MutableList<Uri> = mutableListOf()
+  private var bookCoverUri: Uri? = null
+  private var backCoverUri: Uri? = null
   val genders = arrayOf("Romântico", "Ficção científica", "Fantasia", "Conto", "Terror", "Aventura")
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,10 +36,22 @@ class RegisterBook : AppCompatActivity() {
 
   private fun setUpListeners() {
     //pegando imagens
-    val getImage = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){
+    var text = ""
+    val imageBookCover = registerForActivityResult(ActivityResultContracts.GetContent()){
+     bookCoverUri = it
+      text += "- ${it}\n"
+      binding.tvImageList.text = text
+    }
+
+    val imageBackCover = registerForActivityResult(ActivityResultContracts.GetContent()){
+      backCoverUri = it
+      text += "- ${it}\n"
+      binding.tvImageList.text = text
+    }
+
+    val imageBookPages = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){
       currentImages = it
 
-      var text = ""
       for(uri in currentImages){
         text += "- ${uri}\n"
       }
@@ -60,8 +75,15 @@ class RegisterBook : AppCompatActivity() {
 
     }
 
-    binding.addImage.setOnClickListener {
-      getImage.launch("image/*")
+    binding.buttonBookPages.setOnClickListener {
+      imageBookPages.launch("image/*")
+    }
+
+    binding.buttonBookCover.setOnClickListener {
+      imageBookCover.launch("image/*")
+    }
+    binding.buttonBackCover.setOnClickListener {
+      imageBackCover.launch("image/*")
     }
 
     binding.register.setOnClickListener {
@@ -69,7 +91,7 @@ class RegisterBook : AppCompatActivity() {
       val fieldAuthor = binding.editTextAuthor.text.toString()
       val fieldSynopsis = binding.editTextSynopsis.text.toString()
       val user = loggedUser.getUser()
-      val check = fieldChecklist(fieldTitle, fieldAuthor, fieldSynopsis)
+      val check = fieldChecklist(fieldTitle, fieldAuthor, bookCoverUri)
 
       if (user != null && check) {
         val book = Book(UUID.randomUUID(), fieldTitle, fieldAuthor, fieldGender, fieldSynopsis, user.user_id)
@@ -78,24 +100,24 @@ class RegisterBook : AppCompatActivity() {
 
         val photoDAO = PhotoDAO()
         val uriPath = URIPathHelper()
+        photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, bookCoverUri as Uri).toString()), book.book_id)
+        if(backCoverUri is Uri){
+          photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, backCoverUri as Uri).toString()), book.book_id)
+        }
         for(uri in currentImages){
           photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, uri).toString()), book.book_id)
         }
-        if(!book.photos.isEmpty()){
-          Toast.makeText(this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show()
-          finish()
-        }else{
-          bookDAO.removeBook(book, user)
-          Toast.makeText(this, "Preencha os campos obrigatórios", Toast.LENGTH_LONG).show()
-        }
+
+        Toast.makeText(this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show()
+        finish()
       }else{
         Toast.makeText(this, "Preencha os campos obrigatórios", Toast.LENGTH_LONG).show()
       }
     }
   }
 
-  private fun fieldChecklist(title: String, author: String, synopsis: String): Boolean{
-    if(title.equals("") || author.equals("")){
+  private fun fieldChecklist(title: String, author: String, bookCover: Uri?): Boolean{
+    if(title.equals("") || author.equals("") || bookCover == null){
       return false
     }
     return true
