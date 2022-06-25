@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background2"
     tools:context=".screens.my_books.RegisterBook">
 
     <androidx.cardview.widget.CardView
@@ -143,6 +142,9 @@
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
+        app:boxStrokeColor="@color/navy_blue"
+        app:hintTextColor="@color/navy_blue"
+        android:outlineSpotShadowColor="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleSpinner" />
@@ -164,7 +166,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/authorLayout">
+        app:layout_constraintTop_toBottomOf="@+id/spinner">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextSynopsis"
@@ -213,6 +215,8 @@
                 android:text="Capa*"
                 android:textStyle="bold"
                 app:cardCornerRadius="15dp"
+                android:backgroundTint="@color/navy_blue"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -225,6 +229,7 @@
                 android:text="Contracapa"
                 android:textStyle="bold"
                 app:cardCornerRadius="15dp"
+                android:backgroundTint="@color/navy_blue"
                 app:layout_constraintStart_toEndOf="@+id/addImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -234,6 +239,7 @@
                 android:layout_marginStart="24dp"
                 android:drawableLeft="@drawable/icon_gallery"
                 android:text="Páginas do livro"
+                android:backgroundTint="@color/navy_blue"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/buttonBackCover" />
 
@@ -249,7 +255,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@color/navy_blue"
+        android:backgroundTint="@color/navy_blue"
         android:text="@string/register"
         android:textColor="#FFFFFF"
         android:textStyle="bold"

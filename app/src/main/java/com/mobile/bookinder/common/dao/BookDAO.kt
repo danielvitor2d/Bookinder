@@ -55,7 +55,7 @@ class BookDAO {
     return false
   }
 
-  fun allByUser(user_id: UUID): MutableList<Book>{
+  fun allByUser(user_id: UUID?): MutableList<Book>{
     return bookList.filter { it.owner == user_id } as MutableList<Book>
   }
 
