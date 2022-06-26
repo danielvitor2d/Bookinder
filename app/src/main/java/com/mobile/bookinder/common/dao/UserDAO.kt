@@ -61,7 +61,7 @@ class UserDAO {
     }
   }
 
-  fun getById(user_id: UUID): User? {
+  fun getById(user_id: UUID?): User? {
     for (user in userList) {
       if (user.user_id == user_id) {
         return user

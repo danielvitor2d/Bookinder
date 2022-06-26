@@ -38,6 +38,14 @@ class PhotoDAO {
     photoList.remove(photo)
   }
 
+  fun removePhotoBook(photo: UUID){
+    for (p in photoList){
+      if (p.photo_id == photo){
+        photoList.remove(p)
+      }
+    }
+  }
+
   fun findById(id: UUID?) : Photo?{
     for (photo in photoList) {
       if (photo.photo_id == id)

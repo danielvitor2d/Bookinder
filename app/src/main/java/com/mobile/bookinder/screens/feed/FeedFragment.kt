@@ -1,6 +1,5 @@
 package com.mobile.bookinder.screens.feed
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater

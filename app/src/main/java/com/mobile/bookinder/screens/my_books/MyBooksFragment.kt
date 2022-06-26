@@ -4,11 +4,9 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +14,9 @@ import com.mobile.bookinder.R
 import com.mobile.bookinder.common.dao.BookDAO
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.LoggedUser
-import com.mobile.bookinder.common.model.User
+import com.mobile.bookinder.common.`interface`.CardBookEvent
 import com.mobile.bookinder.databinding.FragmentMyBooksBinding
+
 
 class MyBooksFragment: Fragment(), CardBookEvent {
   private var _binding: FragmentMyBooksBinding? = null
@@ -79,7 +78,7 @@ class MyBooksFragment: Fragment(), CardBookEvent {
     val bundle = Bundle()
     bundle.putString("book_id", book.book_id.toString())
 
-    val intent = Intent(this.context, BookActivity::class.java)
+    val intent = Intent(this.context, MyBookActivity::class.java)
     intent.putExtras(bundle)
     startActivity(intent)
   }
