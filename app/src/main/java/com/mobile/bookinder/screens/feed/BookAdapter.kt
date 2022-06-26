@@ -1,14 +1,15 @@
 package com.mobile.bookinder.screens.feed
 
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
 import com.mobile.bookinder.common.dao.BookDAO
+import com.mobile.bookinder.common.dao.PhotoDAO
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.LoggedUser
 
@@ -16,14 +17,15 @@ class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.
   private val bookDao = BookDAO()
   private var books: MutableList<Book> = mutableListOf()
   private val loggedUser = LoggedUser()
+  private val user = loggedUser.getUser()
 
   fun updateAll() {
-    books = bookDao.allByUser(loggedUser.getUser()?.user_id)
+    books = bookDao.all(user)
     notifyDataSetChanged()
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-    books = bookDao.all()
+    books = bookDao.all(user)
     val card = LayoutInflater
       .from(parent.context)
       .inflate(R.layout.message_card_feed_books, parent, false)
@@ -33,8 +35,18 @@ class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.
   }
 
   override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-    "Livro: ${books[position].title}".also { holder.bookTitle.text = it }
-    "Autor(a): ${books[position].author}".also { holder.bookAuthor.text = it }
+    holder.bookTitle.text = "Livro: ${books[position].title}"
+    holder.bookAuthor.text = "Autor(a): ${books[position].author}"
+    holder.gender.text = "Gênero: ${books[position].author}"
+
+    val photoUuid = books[position].photos[0]
+
+    if(photoUuid != null){
+      val photoDAO = PhotoDAO()
+      val photo = photoDAO.findById(photoUuid)
+      val myBitmap = BitmapFactory.decodeFile(photo?.path)
+      holder.coverPhoto.setImageBitmap(myBitmap)
+    }
   }
 
   override fun getItemCount(): Int {
@@ -45,6 +57,8 @@ class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.
     private var toggleLiked = true
     val bookTitle: TextView = itemView.findViewById(R.id.title)
     val bookAuthor: TextView = itemView.findViewById(R.id.author)
+    val gender: TextView = itemView.findViewById(R.id.gender)
+    val coverPhoto: ImageView = itemView.findViewById(R.id.coverPhoto)
     private val imageButtonLikeBook: ImageView = itemView.findViewById(R.id.imageButtonLikeBook)
 
     init {

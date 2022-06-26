@@ -45,6 +45,23 @@ class BookDAO {
     return null
   }
 
+  fun alterBook(book: Book, title: String, author: String, gender: String, synopsis: String, photos: MutableList<UUID>){
+    book.title = title
+    book.author = author
+    book.gender = gender
+    book.synopsis = synopsis
+    book.photos = photos
+  }
+
+  fun deletePhotos(book: Book){
+    val photos = book.photos
+    val photoDAO = PhotoDAO()
+    for (p in photos){
+      photoDAO.removePhotoBook(p)
+    }
+    book.photos.clear()
+  }
+
   fun removeBook(book: Book, user: User?): Boolean{
     val book = findId(book.book_id)
     if (book != null && user != null){
@@ -66,6 +83,18 @@ class BookDAO {
 
   fun all(): MutableList<Book>{
     return bookList
+  }
+
+  fun all(user: User?): MutableList<Book>{
+    val user_books = user?.books //lista de uuid
+    val books: MutableList<Book> = mutableListOf()
+
+    for (book in bookList){
+      if(user_books?.contains(book.book_id) == false){
+        books.add(book)
+      }
+    }
+    return books
   }
 
   fun setBook(book_id: UUID?, _book: Book) {

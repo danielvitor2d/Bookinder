@@ -1,19 +1,20 @@
 package com.mobile.bookinder.screens.my_books
 
 import android.graphics.BitmapFactory
-import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import com.mobile.bookinder.common.dao.BookDAO
 import com.mobile.bookinder.common.dao.PhotoDAO
+import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.common.model.Book
+import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.databinding.ActivityBookBinding
-
 
 class BookActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityBookBinding
   private val bookDAO = BookDAO()
+  private val userDAO = UserDAO()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -22,25 +23,27 @@ class BookActivity : AppCompatActivity() {
 
     val bookId = intent.getStringExtra("book_id")
     val book = bookDAO.findId(bookId)
-
-    if(book != null){
-      setUpListeners(book)
-    }else{
-      Toast.makeText(this, "Erro ao gerar página", Toast.LENGTH_LONG).show()
-    }
+    val user = userDAO.getById(book?.owner)
+    setUpListeners(book, user)
   }
 
-  private fun setUpListeners(book: Book) {
-    binding.title.text = book.title
-    binding.author.text = "Autor(a) " + book.author
-    binding.gender.text = "Gênero: " + book.gender
-    binding.synopsis.text = book.synopsis
-
+  private fun setUpListeners(book: Book?, user: User?) {
     val photoDAO = PhotoDAO()
-    val photo = photoDAO.findById(book.photos[0])
 
-    val myBitmap = BitmapFactory.decodeFile(photo?.path)
+    binding.nameUser.text = user?.firstname
+    binding.emailUser.text = user?.email
+    binding.title.text = book?.title
+    binding.author.text = book?.gender
+    binding.synopsis.text = book?.synopsis
+
+    val coverPhoto = photoDAO.findById(book?.photos?.get(0))
+    val myBitmap = BitmapFactory.decodeFile(coverPhoto?.path)
     binding.bookCover.setImageBitmap(myBitmap)
 
+    if (user?.photo_id != null){
+      val profilePhoto = photoDAO.findById(user?.photo_id)
+      val myBitmap2 = BitmapFactory.decodeFile(profilePhoto?.path)
+      binding.profilePhoto.setImageBitmap(myBitmap2)
+    }
   }
 }
