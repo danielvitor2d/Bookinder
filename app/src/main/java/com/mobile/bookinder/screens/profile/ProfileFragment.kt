@@ -23,6 +23,7 @@ import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.databinding.FragmentProfileBinding
 import com.mobile.bookinder.screens.feedback.Feedback
+import com.mobile.bookinder.screens.other_profile.OtherProfileActivity
 import com.mobile.bookinder.util.URIPathHelper
 import java.util.*
 
@@ -39,6 +40,7 @@ class ProfileFragment: Fragment() {
   private var photoPerfil: Uri? = null
   private var uriPath = URIPathHelper()
   private val photoDAO = PhotoDAO()
+  private val userDAO = UserDAO()
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -125,7 +127,12 @@ class ProfileFragment: Fragment() {
       }
     }
     goToFeedbackButton.setOnClickListener {
-      val intent = Intent(context, Feedback::class.java)
+//      val intent = Intent(context, Feedback::class.java)
+//      startActivity(intent)
+      var bundle = Bundle()
+      bundle.putString("user_id", userDAO.find("teste", "teste")?.user_id.toString())
+      val intent = Intent(context, OtherProfileActivity::class.java)
+      intent.putExtras(bundle)
       startActivity(intent)
     }
 
