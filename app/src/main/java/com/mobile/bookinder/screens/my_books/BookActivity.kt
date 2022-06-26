@@ -1,6 +1,5 @@
 package com.mobile.bookinder.screens.my_books
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Toast
@@ -38,13 +37,10 @@ class BookActivity : AppCompatActivity() {
     binding.synopsis.text = book.synopsis
 
     val photoDAO = PhotoDAO()
-    for(photo_id in book.photos) {
-      val photo = photoDAO.findById(photo_id)
-      if (photo == null)
-        continue
+    val photo = photoDAO.findById(book.photos[0])
 
-      val myBitmap = BitmapFactory.decodeFile(photo.path)
-      binding.bookCover.setImageBitmap(myBitmap)
-    }
+    val myBitmap = BitmapFactory.decodeFile(photo?.path)
+    binding.bookCover.setImageBitmap(myBitmap)
+
   }
 }

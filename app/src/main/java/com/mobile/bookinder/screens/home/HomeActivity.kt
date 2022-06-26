@@ -1,16 +1,18 @@
 package com.mobile.bookinder.screens.home
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.mobile.bookinder.R
+import com.mobile.bookinder.common.dao.PhotoDAO
 import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.databinding.ActivityHomeBinding
 import com.mobile.bookinder.screens.feed.FeedFragment
@@ -20,7 +22,6 @@ import com.mobile.bookinder.screens.my_books.MyBooksFragment
 import com.mobile.bookinder.screens.profile.ProfileFragment
 import com.mobile.bookinder.screens.settings.SettingsFragment
 import com.mobile.bookinder.screens.sign_in.SignInActivity
-import java.util.logging.Logger
 
 class HomeActivity: AppCompatActivity() {
   lateinit var drawerLayout: DrawerLayout
@@ -137,5 +138,17 @@ class HomeActivity: AppCompatActivity() {
     "${user?.email}".also {
       textViewUserEmail.text = it
     }
+
+    val photoDAO = PhotoDAO()
+    val photo = photoDAO.findById(user?.photo_id)
+    if (photo == null){
+      Toast.makeText(this, "A foto é nula", Toast.LENGTH_LONG).show()
+    }
+    if (photo != null){ //porque o usuário nao eh obrigado a ter foto =D
+      val myBitmap = BitmapFactory.decodeFile(photo?.path)
+      val photoView = headerView.findViewById<ImageView>(R.id.imagePerfil)
+      photoView.setImageBitmap(myBitmap)
+    }
+
   }
 }

@@ -75,14 +75,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/book_cover"
+                android:id="@+id/bookCover"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title"
-                app:srcCompat="@drawable/livros" />
+                android:src="@drawable/livros"
+                app:layout_constraintTop_toBottomOf="@id/title"/>
 
             <TextView
                 android:id="@+id/author"
@@ -92,7 +89,7 @@
                 android:text="autor(a)"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/book_cover" />
+                app:layout_constraintTop_toBottomOf="@+id/bookCover" />
 
             <TextView
                 android:id="@+id/gender"

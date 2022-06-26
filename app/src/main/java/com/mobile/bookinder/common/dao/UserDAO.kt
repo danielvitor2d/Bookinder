@@ -1,5 +1,6 @@
 package com.mobile.bookinder.common.dao
 
+import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.common.model.User
 import java.util.*
 
@@ -20,6 +21,23 @@ class UserDAO {
         return user
     }
     return null
+  }
+
+  fun find(user_id: UUID): Boolean{ //saber se o usuário existe
+    for (user in userList){
+      if (user.user_id == user_id){
+        return true
+      }
+    }
+    return false
+  }
+
+  fun insertPhoto(user: User, photo: Photo): Boolean{
+    if (find(user.user_id)){
+      user.photo_id = photo.photo_id
+      return true
+    }
+    return false
   }
 
   fun insertBook(user: User?, book_id: UUID?): Boolean{
@@ -50,6 +68,14 @@ class UserDAO {
       }
     }
     return null
+  }
+
+  fun emailExists(email: String): Boolean{
+    for (user in userList){
+      if(user.email == email)
+        return true
+    }
+    return false
   }
 
   companion object {
