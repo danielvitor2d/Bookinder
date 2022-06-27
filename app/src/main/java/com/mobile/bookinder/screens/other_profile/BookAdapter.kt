@@ -1,4 +1,4 @@
-package com.mobile.bookinder.screens.feed
+package com.mobile.bookinder.screens.other_profile
 
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
@@ -16,11 +16,11 @@ import com.mobile.bookinder.common.interfaces.FeedCardBookEvent
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.LoggedUser
 
-class BookAdapter(private val books: MutableList<Book>, private val feedCardBookEvent: FeedCardBookEvent): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
-  private var likeDAO = LikeDAO()
-  private var loggedUser = LoggedUser()
-  private var user = loggedUser.getUser()
-  private var booksILiked = likeDAO.booksILiked(loggedUser.getUser()?.user_id)
+class BookAdapter(private val books: MutableList<Book>, private val cardBookEvent: FeedCardBookEvent): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
+    private var likeDAO = LikeDAO()
+    private var loggedUser = LoggedUser()
+    private var user = loggedUser.getUser()
+    private var booksILiked = likeDAO.booksILiked(loggedUser.getUser()?.user_id)
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
     val card = LayoutInflater
@@ -53,20 +53,19 @@ class BookAdapter(private val books: MutableList<Book>, private val feedCardBook
       booksILiked = likeDAO.booksILiked(loggedUser.getUser()?.user_id)
       val check = booksILiked.contains(books[position].book_id)
       if (!check){//se nunca curti, agr curto
-        feedCardBookEvent.likeBook(books[position], position)
+        cardBookEvent.likeBook(books[position], position)
         holder.likeBook.setImageResource(R.drawable.ic_filled_star)
       }else{//entao deslike
         val like = likeDAO.findLike(user_id!!, book_id)
-        feedCardBookEvent.deslikeBook(books[position], position, like)
+        cardBookEvent.deslikeBook(books[position], position, like)
         holder.likeBook.setImageResource(R.drawable.ic_star)
       }
 
     }
 
     holder.card.setOnClickListener {
-      feedCardBookEvent.showCardBook(books[position], position)
+      cardBookEvent.showCardBook(books[position], position)
     }
-
   }
 
   override fun getItemCount(): Int {

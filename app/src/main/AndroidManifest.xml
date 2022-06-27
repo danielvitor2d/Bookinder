@@ -45,14 +45,16 @@
             android:exported="false" />
         <activity
             android:name=".screens.my_books.RegisterBook"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".screens.my_books.MyBookActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
+        <activity
+            android:name=".screens.other_profile.OtherProfileActivity"
+            android:exported="false" />
         <activity
             android:name=".screens.my_books.BookActivity"
-            android:exported="false"></activity>
-
+            android:exported="false" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
