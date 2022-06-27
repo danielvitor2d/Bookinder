@@ -49,6 +49,9 @@
         <activity
             android:name=".screens.my_books.MyBookActivity"
             android:exported="false"></activity>
+        <activity
+            android:name=".screens.my_books.BookActivity"
+            android:exported="false"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

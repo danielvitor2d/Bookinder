@@ -14,14 +14,13 @@ import com.mobile.bookinder.R
 import com.mobile.bookinder.common.dao.BookDAO
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.LoggedUser
-import com.mobile.bookinder.common.`interface`.CardBookEvent
+import com.mobile.bookinder.common.interfaces.CardBookEvent
 import com.mobile.bookinder.databinding.FragmentMyBooksBinding
 
 
 class MyBooksFragment: Fragment(), CardBookEvent {
   private var _binding: FragmentMyBooksBinding? = null
   private val binding get() = _binding!!
-  private var bookAdapter: BookAdapter? = null
   private val bookDao = BookDAO()
   private val loggedUser = LoggedUser()
 

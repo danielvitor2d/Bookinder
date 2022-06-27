@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
-import com.mobile.bookinder.common.`interface`.CardBookEvent
+import com.mobile.bookinder.common.interfaces.CardBookEvent
 import com.mobile.bookinder.common.dao.PhotoDAO
 import com.mobile.bookinder.common.model.Book
 
