@@ -1,6 +1,5 @@
 package com.mobile.bookinder.common.model
 
-import android.os.Build
 import java.util.*
 
 

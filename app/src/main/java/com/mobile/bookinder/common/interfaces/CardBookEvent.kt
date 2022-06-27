@@ -1,4 +1,4 @@
-package com.mobile.bookinder.common.`interface`
+package com.mobile.bookinder.common.interfaces
 
 import com.mobile.bookinder.common.model.Book
 

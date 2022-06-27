@@ -4,34 +4,30 @@ import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.bookinder.R
-import com.mobile.bookinder.common.dao.BookDAO
+import com.mobile.bookinder.common.dao.LikeDAO
 import com.mobile.bookinder.common.dao.PhotoDAO
+import com.mobile.bookinder.common.interfaces.FeedCardBookEvent
 import com.mobile.bookinder.common.model.Book
+import com.mobile.bookinder.common.model.Like
 import com.mobile.bookinder.common.model.LoggedUser
 
-class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
-  private val bookDao = BookDAO()
-  private var books: MutableList<Book> = mutableListOf()
-  private val loggedUser = LoggedUser()
-  private val user = loggedUser.getUser()
-
-  fun updateAll() {
-    books = bookDao.all(user)
-    notifyDataSetChanged()
-  }
+class BookAdapter(private val books: MutableList<Book>, private val feedCardBookEvent: FeedCardBookEvent): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
+  private var likeDAO = LikeDAO()
+  private var loggedUser = LoggedUser()
+  private var user = loggedUser.getUser()
+  private var booksILiked = likeDAO.booksILiked(loggedUser.getUser()?.user_id)
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-    books = bookDao.all(user)
     val card = LayoutInflater
       .from(parent.context)
       .inflate(R.layout.message_card_feed_books, parent, false)
-    return MessageViewHolder(card) {
-      clickListener(books[it], it)
-    }
+    return MessageViewHolder(card)
   }
 
   override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
@@ -47,27 +43,44 @@ class BookAdapter(private val clickListener: (Book, Int) -> Unit): RecyclerView.
       val myBitmap = BitmapFactory.decodeFile(photo?.path)
       holder.coverPhoto.setImageBitmap(myBitmap)
     }
+
+    val user_id = user?.user_id
+    val book_id = books[position].book_id
+    if (booksILiked.contains(book_id)){
+      holder.likeBook.setImageResource(R.drawable.ic_filled_star)
+    }
+
+    holder.likeBook.setOnClickListener {
+      booksILiked = likeDAO.booksILiked(loggedUser.getUser()?.user_id)
+      val check = if (booksILiked.contains(books[position].book_id)) true else false
+      if (check == false){//se nunca curti, agr curto
+        feedCardBookEvent.likeBook(books[position], position)
+        holder.likeBook.setImageResource(R.drawable.ic_filled_star)
+      }else{//entao deslike
+        val like = likeDAO.findLike(user_id!!, book_id)
+        feedCardBookEvent.deslikeBook(books[position], position, like)
+        holder.likeBook.setImageResource(R.drawable.ic_star)
+      }
+
+    }
+
+    holder.card.setOnClickListener {
+      feedCardBookEvent.showCardBook(books[position], position)
+    }
+
   }
 
   override fun getItemCount(): Int {
     return books.size
   }
 
-  class MessageViewHolder(itemView: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(itemView) {
-    private var toggleLiked = true
+  class MessageViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    val card: CardView = itemView.findViewById(R.id.cardSelect)
     val bookTitle: TextView = itemView.findViewById(R.id.title)
     val bookAuthor: TextView = itemView.findViewById(R.id.author)
     val gender: TextView = itemView.findViewById(R.id.gender)
     val coverPhoto: ImageView = itemView.findViewById(R.id.coverPhoto)
-    private val imageButtonLikeBook: ImageView = itemView.findViewById(R.id.imageButtonLikeBook)
+    val likeBook: ImageButton = itemView.findViewById(R.id.imageButtonLikeBook)
 
-    init {
-      imageButtonLikeBook.setOnClickListener {
-        clickAtPosition(adapterPosition)
-        if (toggleLiked) imageButtonLikeBook.setImageResource(R.drawable.ic_filled_star)
-        else imageButtonLikeBook.setImageResource(R.drawable.ic_star)
-        toggleLiked = !toggleLiked
-      }
-    }
   }
 }
