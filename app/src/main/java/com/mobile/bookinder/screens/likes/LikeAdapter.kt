@@ -1,5 +1,7 @@
 package com.mobile.bookinder.screens.likes
 
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import com.mobile.bookinder.common.dao.BookDAO
 import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.common.model.Like
 import com.mobile.bookinder.common.model.Util
+import com.mobile.bookinder.screens.other_profile.OtherProfileActivity
 
 class LikeAdapter(private val likes: MutableList<Like>): RecyclerView.Adapter<LikeAdapter.MessageViewHolder>() {
 
@@ -37,6 +40,14 @@ class LikeAdapter(private val likes: MutableList<Like>): RecyclerView.Adapter<Li
 
     holder.textViewGoToProfile.setOnClickListener {
       Toast.makeText(holder.itemView.context, "Indo para perfil de ${userFrom?.firstname}", Toast.LENGTH_SHORT).show()
+      var intent = Intent(it.context, OtherProfileActivity::class.java)
+
+      var bundle = Bundle()
+      bundle.putString("user_id", userFrom?.user_id.toString())
+
+      intent.putExtras(bundle)
+
+      it.context.startActivity(intent)
     }
   }
 

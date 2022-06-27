@@ -14,7 +14,6 @@ import com.mobile.bookinder.common.dao.LikeDAO
 import com.mobile.bookinder.common.dao.PhotoDAO
 import com.mobile.bookinder.common.interfaces.FeedCardBookEvent
 import com.mobile.bookinder.common.model.Book
-import com.mobile.bookinder.common.model.Like
 import com.mobile.bookinder.common.model.LoggedUser
 
 class BookAdapter(private val books: MutableList<Book>, private val feedCardBookEvent: FeedCardBookEvent): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
@@ -52,8 +51,8 @@ class BookAdapter(private val books: MutableList<Book>, private val feedCardBook
 
     holder.likeBook.setOnClickListener {
       booksILiked = likeDAO.booksILiked(loggedUser.getUser()?.user_id)
-      val check = if (booksILiked.contains(books[position].book_id)) true else false
-      if (check == false){//se nunca curti, agr curto
+      val check = booksILiked.contains(books[position].book_id)
+      if (!check){//se nunca curti, agr curto
         feedCardBookEvent.likeBook(books[position], position)
         holder.likeBook.setImageResource(R.drawable.ic_filled_star)
       }else{//entao deslike
