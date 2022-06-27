@@ -52,11 +52,12 @@ class UserDAO {
 
   }
 
-  fun setUser(user_id: UUID?, _user: User) {
-    for (i in 0 until userList.size) {
-      if (userList[i].user_id == user_id) {
-        userList[i] = _user
-        return
+  fun setUser(_user: User) {
+    for (user in userList){
+      if (user.user_id == _user.user_id){
+        user.firstname = _user.firstname
+        user.lastname = _user.lastname
+        user.email = _user.email
       }
     }
   }

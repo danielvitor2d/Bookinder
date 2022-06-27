@@ -85,7 +85,7 @@ class BookDAO {
     return bookList
   }
 
-  fun all(user: User?): MutableList<Book>{
+  fun allExcludeUserBooks(user: User?): MutableList<Book>{
     val user_books = user?.books //lista de uuid
     val books: MutableList<Book> = mutableListOf()
 

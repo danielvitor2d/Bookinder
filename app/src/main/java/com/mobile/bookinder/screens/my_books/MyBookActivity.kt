@@ -1,8 +1,6 @@
 package com.mobile.bookinder.screens.my_books
 
 import android.R
-import android.graphics.BitmapFactory
-import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -101,7 +99,7 @@ class MyBookActivity : AppCompatActivity() {
       val user = book.owner
       val bookDAO = BookDAO()
 
-      val check = fieldChecklist(title, author, text, pagesRemoved)
+      val check = fieldChecklist(title, author, currentImages, pagesRemoved)
       if (check) {
         bookDAO.alterBook(book, title, author, gender, synopsis, photos)
         if(pagesRemoved){
@@ -122,10 +120,10 @@ class MyBookActivity : AppCompatActivity() {
 
   }
 
-  private fun fieldChecklist(title: String, author: String, text: String, removed: Boolean): Boolean{
+  private fun fieldChecklist(title: String, author: String, images: MutableList<Uri>, removed: Boolean): Boolean{
     if(title.equals("") || author.equals("")){
       return false
-    }else if(text.equals("") && removed){
+    }else if(images.size == 0 && removed){
       return false
     }
     return true

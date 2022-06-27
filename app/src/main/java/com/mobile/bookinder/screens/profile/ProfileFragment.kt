@@ -41,6 +41,7 @@ class ProfileFragment: Fragment() {
   private var uriPath = URIPathHelper()
   private val photoDAO = PhotoDAO()
   private val userDAO = UserDAO()
+  private val loggedUser = LoggedUser()
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -78,7 +79,7 @@ class ProfileFragment: Fragment() {
   }
 
   private fun setUpListeners(context: Context) {
-    var user = LoggedUser.user
+    var user = loggedUser.getUser()
 
     val selectImage = registerForActivityResult(ActivityResultContracts.GetContent()){
       photoPerfil = it
@@ -119,7 +120,7 @@ class ProfileFragment: Fragment() {
         }
 
         val userDAO = UserDAO()
-        userDAO.setUser(user.user_id, user)
+        userDAO.setUser(user)
 
         Toast.makeText(context, "Dados alterados com sucesso!", Toast.LENGTH_LONG).show()
 
