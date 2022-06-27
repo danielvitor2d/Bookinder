@@ -32,7 +32,7 @@ class BookAdapter(private val books: MutableList<Book>, private val feedCardBook
   override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
     holder.bookTitle.text = "Livro: ${books[position].title}"
     holder.bookAuthor.text = "Autor(a): ${books[position].author}"
-    holder.gender.text = "Gênero: ${books[position].author}"
+    holder.gender.text = "Gênero: ${books[position].gender}"
 
     val photoUuid = books[position].photos[0]
 

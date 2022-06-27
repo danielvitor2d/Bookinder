@@ -33,7 +33,8 @@ class BookActivity : AppCompatActivity() {
     binding.nameUser.text = user?.firstname
     binding.emailUser.text = user?.email
     binding.title.text = book?.title
-    binding.author.text = book?.gender
+    binding.author.text = book?.author
+    binding.gender.text = book?.gender
     binding.synopsis.text = book?.synopsis
 
     val coverPhoto = photoDAO.findById(book?.photos?.get(0))
