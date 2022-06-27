@@ -101,7 +101,6 @@ class ProfileFragment: Fragment() {
         return@setOnClickListener
       }
 
-
       if (user != null) {
         user.firstname = firstname
         user.lastname = lastname

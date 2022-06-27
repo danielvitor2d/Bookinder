@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.mobile.bookinder.common.dao.PhotoDAO
 import com.mobile.bookinder.common.model.User
-import com.mobile.bookinder.databinding.ActivitySignUpBinding
 import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.common.model.Photo
+import com.mobile.bookinder.databinding.ActivitySignUpBinding
 import com.mobile.bookinder.util.URIPathHelper
 import java.util.*
 
