@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.app
 import com.mobile.bookinder.common.dao.PhotoDAO
 import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.common.dao.UserDAO
@@ -15,10 +19,22 @@ import com.mobile.bookinder.util.URIPathHelper
 import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
+  private lateinit var database: DatabaseReference
   private lateinit var binding: ActivitySignUpBinding
   private var photoPerfil: Uri? = null
   private var uriPath = URIPathHelper()
 
+  fun initializeDbRef() {
+    // [START initialize_database_ref]
+    database = Firebase.database.reference
+    // [END initialize_database_ref]
+  }
+
+//  fun writeNewUser(userId: String, name: String, email: String) {
+//    val user = User(name, email)
+//
+//    database.child("users").child(userId).setValue(user)
+//  }
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     binding = ActivitySignUpBinding.inflate(layoutInflater)
