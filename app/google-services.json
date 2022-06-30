@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "566925419716",
+    "project_id": "bookinder-6981e",
+    "storage_bucket": "bookinder-6981e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566925419716:android:b82aa73879de49344ad591",
+        "android_client_info": {
+          "package_name": "com.mobile.bookinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566925419716-0lufu8ddqt5praj1vsbg3hkor58157dj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0HxYg6qEi6ew4mHM-eOxV_a4LXYkNw-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566925419716-0lufu8ddqt5praj1vsbg3hkor58157dj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

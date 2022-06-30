@@ -1,6 +1,5 @@
 package com.mobile.bookinder.common.dao
 
-import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.common.model.User
 import java.util.*
