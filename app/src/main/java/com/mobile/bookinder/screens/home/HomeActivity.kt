@@ -22,6 +22,7 @@ import com.mobile.bookinder.screens.my_books.MyBooksFragment
 import com.mobile.bookinder.screens.profile.ProfileFragment
 import com.mobile.bookinder.screens.settings.SettingsFragment
 import com.mobile.bookinder.screens.sign_in.SignInActivity
+import java.io.File
 
 class HomeActivity: AppCompatActivity() {
   lateinit var drawerLayout: DrawerLayout
@@ -140,15 +141,13 @@ class HomeActivity: AppCompatActivity() {
     }
 
     val photoDAO = PhotoDAO()
-    val photo = photoDAO.findById(user?.photo_id)
-    if (photo == null){
-      Toast.makeText(this, "A foto é nula", Toast.LENGTH_LONG).show()
-    }
-    if (photo != null){ //porque o usuário nao eh obrigado a ter foto =D
-      val myBitmap = BitmapFactory.decodeFile(photo?.path)
+    val photo = photoDAO.findById(user?.photo_id) ?: return
+
+    val file = File(photo.path)
+    if (file.exists()) {
+      val myBitmap = BitmapFactory.decodeFile(file.absolutePath)
       val photoView = headerView.findViewById<ImageView>(R.id.imagePerfil)
       photoView.setImageBitmap(myBitmap)
     }
-
   }
 }

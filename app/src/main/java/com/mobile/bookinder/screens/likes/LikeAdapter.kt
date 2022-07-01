@@ -39,7 +39,7 @@ class LikeAdapter(private val likes: MutableList<Like>): RecyclerView.Adapter<Li
     "$formattedHour - $formattedDate".also { holder.textViewLikeDateTime.text = it }
 
     holder.textViewGoToProfile.setOnClickListener {
-      Toast.makeText(holder.itemView.context, "Indo para perfil de ${userFrom?.firstname}", Toast.LENGTH_SHORT).show()
+//      Toast.makeText(holder.itemView.context, "Indo para perfil de ${userFrom?.firstname}", Toast.LENGTH_SHORT).show()
       var intent = Intent(it.context, OtherProfileActivity::class.java)
 
       var bundle = Bundle()

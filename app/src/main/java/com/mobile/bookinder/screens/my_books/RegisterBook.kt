@@ -14,7 +14,7 @@ import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.databinding.ActivityRegisterBookBinding
-import com.mobile.bookinder.util.URIPathHelper
+import com.mobile.bookinder.screens.sign_up.SignUpActivity
 import java.net.URI
 import java.util.*
 
@@ -37,34 +37,33 @@ class RegisterBook : AppCompatActivity() {
   private fun setUpListeners() {
     //pegando imagens
     var text = ""
-    val imageBookCover = registerForActivityResult(ActivityResultContracts.GetContent()){
-     bookCoverUri = it
-      text += "- ${it}\n"
-      binding.tvImageList.text = text
+    val imageBookCover = registerForActivityResult(ActivityResultContracts.GetContent()) {
+      bookCoverUri = it
+//      binding.tvImageList.text = text
     }
 
-    val imageBackCover = registerForActivityResult(ActivityResultContracts.GetContent()){
+    val imageBackCover = registerForActivityResult(ActivityResultContracts.GetContent()) {
       backCoverUri = it
-      text += "- ${it}\n"
-      binding.tvImageList.text = text
+//      binding.tvImageList.text = text
     }
 
-    val imageBookPages = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){
+    val imageBookPages = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
       currentImages = it
 
-      for(uri in currentImages){
+      for (uri in currentImages) {
         text += "- ${uri}\n"
       }
 
-      binding.tvImageList.text = text
+//      binding.tvImageList.text = text
     }
 
     //pegando o genero
     val spinner = binding.spinner
     var fieldGender = ""
-    val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, genders)
+    val arrayAdapter =
+      ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, genders)
     spinner.adapter = arrayAdapter
-    spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+    spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
       override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         fieldGender = genders[p2]
       }
@@ -72,7 +71,6 @@ class RegisterBook : AppCompatActivity() {
       override fun onNothingSelected(p0: AdapterView<*>?) {
         TODO("Not yet implemented")
       }
-
     }
 
     binding.buttonBookPages.setOnClickListener {
@@ -82,6 +80,7 @@ class RegisterBook : AppCompatActivity() {
     binding.buttonBookCover.setOnClickListener {
       imageBookCover.launch("image/*")
     }
+
     binding.buttonBackCover.setOnClickListener {
       imageBackCover.launch("image/*")
     }
@@ -94,30 +93,45 @@ class RegisterBook : AppCompatActivity() {
       val check = fieldChecklist(fieldTitle, fieldAuthor, bookCoverUri)
 
       if (user != null && check) {
-        val book = Book(UUID.randomUUID(), fieldTitle, fieldAuthor, fieldGender, fieldSynopsis, user.user_id)
+        val book =
+          Book(UUID.randomUUID(), fieldTitle, fieldAuthor, fieldGender, fieldSynopsis, user.user_id)
         val bookDAO = BookDAO()
         bookDAO.insert(book, user)
 
         val photoDAO = PhotoDAO()
-        val uriPath = URIPathHelper()
-        photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, bookCoverUri as Uri).toString()), book.book_id)
-        if(backCoverUri is Uri){
-          photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, backCoverUri as Uri).toString()), book.book_id)
+
+        val bitmapBookCover = SignUpActivity.getContactBitmapFromURI(it.context, bookCoverUri!!)
+        val fileBookCover = SignUpActivity.saveBitmapIntoSDCardImage(it.context,
+          bitmapBookCover,
+          "${UUID.randomUUID()}.jpg")
+
+        photoDAO.insert(Photo(UUID.randomUUID(), fileBookCover.path), book.book_id)
+        if (backCoverUri != null) {
+          val bitmapBackCover = SignUpActivity.getContactBitmapFromURI(it.context, backCoverUri!!)
+          val fileBackCover = SignUpActivity.saveBitmapIntoSDCardImage(it.context,
+            bitmapBackCover,
+            "${UUID.randomUUID()}.jpg")
+          photoDAO.insert(Photo(UUID.randomUUID(), fileBackCover.path), book.book_id)
         }
-        for(uri in currentImages){
-          photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, uri).toString()), book.book_id)
+        for (uri in currentImages) {
+          val bitmapImage = SignUpActivity.getContactBitmapFromURI(it.context, uri)
+          val fileImage = SignUpActivity.saveBitmapIntoSDCardImage(it.context,
+            bitmapImage,
+            "${UUID.randomUUID()}.jpg")
+
+          photoDAO.insert(Photo(UUID.randomUUID(), fileImage.path), book.book_id)
         }
 
         Toast.makeText(this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show()
         finish()
-      }else{
+      } else {
         Toast.makeText(this, "Preencha os campos obrigatórios", Toast.LENGTH_LONG).show()
       }
     }
   }
 
-  private fun fieldChecklist(title: String, author: String, bookCover: Uri?): Boolean{
-    if(title.equals("") || author.equals("") || bookCover == null){
+  private fun fieldChecklist(title: String, author: String, bookCover: Uri?): Boolean {
+    if (title.equals("") || author.equals("") || bookCover == null) {
       return false
     }
     return true

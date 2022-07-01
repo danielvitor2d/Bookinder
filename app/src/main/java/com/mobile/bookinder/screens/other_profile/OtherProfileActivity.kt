@@ -1,16 +1,16 @@
 package com.mobile.bookinder.screens.other_profile
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mobile.bookinder.common.dao.BookDAO
-import com.mobile.bookinder.common.dao.LikeDAO
-import com.mobile.bookinder.common.dao.MatchDAO
-import com.mobile.bookinder.common.dao.UserDAO
+import com.mobile.bookinder.R
+import com.mobile.bookinder.common.dao.*
 import com.mobile.bookinder.common.interfaces.FeedCardBookEvent
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.Like
@@ -18,6 +18,7 @@ import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.databinding.ActivityOtherProfileBinding
 import com.mobile.bookinder.screens.my_books.BookActivity
+import java.io.File
 import java.util.*
 
 class OtherProfileActivity: AppCompatActivity(), FeedCardBookEvent {
@@ -30,6 +31,7 @@ class OtherProfileActivity: AppCompatActivity(), FeedCardBookEvent {
   private val userDAO = UserDAO()
   private val likeDAO = LikeDAO()
   private val matchDAO = MatchDAO()
+  private val photoDAO = PhotoDAO()
   private val loggedUser = LoggedUser()
 
   private var user: User? = null
@@ -54,9 +56,19 @@ class OtherProfileActivity: AppCompatActivity(), FeedCardBookEvent {
     }
 
     setContentView(binding.root)
+
     setRecyclerView()
     setUpTextViews()
     setUpActionBar()
+
+    val photo = photoDAO.findById(user?.photo_id) ?: return
+
+    val file = File(photo.path)
+    if (file.exists()) {
+      val myBitmap = BitmapFactory.decodeFile(file.absolutePath)
+      val photoView = binding.imageViewPhotoUser
+      photoView.setImageBitmap(myBitmap)
+    }
   }
 
   override fun onResume() {
@@ -75,9 +87,9 @@ class OtherProfileActivity: AppCompatActivity(), FeedCardBookEvent {
   }
 
   private fun setUpTextViews() {
-    binding.textViewEmail.text = "E-mail: ${user?.email}"
-    binding.textViewFullName.text = "Nome Completo: ${user?.firstname} ${user?.lastname}"
-    binding.textViewSubtitleBooks.text = "Livros de ${user?.firstname}"
+    "E-mail: ${user?.email}".also { binding.textViewEmail.text = it }
+    "Nome Completo: ${user?.firstname} ${user?.lastname}".also { binding.textViewFullName.text = it }
+    "Livros de ${user?.firstname}".also { binding.textViewSubtitleBooks.text = it }
   }
 
   private fun setRecyclerView() {

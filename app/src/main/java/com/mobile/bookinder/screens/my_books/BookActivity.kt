@@ -41,7 +41,7 @@ class BookActivity : AppCompatActivity() {
     val myBitmap = BitmapFactory.decodeFile(coverPhoto?.path)
     binding.bookCover.setImageBitmap(myBitmap)
 
-    if (user?.photo_id != null){
+    if (user?.photo_id != null) {
       val profilePhoto = photoDAO.findById(user?.photo_id)
       val myBitmap2 = BitmapFactory.decodeFile(profilePhoto?.path)
       binding.profilePhoto.setImageBitmap(myBitmap2)

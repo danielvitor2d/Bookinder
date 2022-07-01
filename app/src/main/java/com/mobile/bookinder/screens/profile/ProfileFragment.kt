@@ -24,7 +24,9 @@ import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.databinding.FragmentProfileBinding
 import com.mobile.bookinder.screens.feedback.Feedback
 import com.mobile.bookinder.screens.other_profile.OtherProfileActivity
+import com.mobile.bookinder.screens.sign_up.SignUpActivity
 import com.mobile.bookinder.util.URIPathHelper
+import java.io.File
 import java.util.*
 
 class ProfileFragment: Fragment() {
@@ -83,8 +85,7 @@ class ProfileFragment: Fragment() {
 
     val selectImage = registerForActivityResult(ActivityResultContracts.GetContent()){
       photoPerfil = it
-      val myBitmap = BitmapFactory.decodeFile(uriPath.getPath(context, photoPerfil as Uri))
-      imagePerfil.setImageBitmap(myBitmap)
+      imagePerfil.setImageURI(photoPerfil)
     }
 
     binding.buttonAlterPhoto.setOnClickListener {
@@ -106,16 +107,19 @@ class ProfileFragment: Fragment() {
         user.lastname = lastname
         user.email = email
 
-        Toast.makeText(context, "cheguei só até aqui", Toast.LENGTH_LONG).show()
-
         val photo = photoDAO.findById(user.photo_id)
-        if(uriPath.getPath(context, photoPerfil as Uri) != photo?.path){
-          if(photo != null){
-            Toast.makeText(context, "O usuário já tinha uma foto", Toast.LENGTH_LONG).show()
+        if (photoPerfil != null) {
+          if (photo != null) {
+//            Toast.makeText(context, "O usuário já tinha uma foto", Toast.LENGTH_LONG).show()
             photoDAO.remove(photo, user)
           }
-          Toast.makeText(context, "Agora ele tem uma nova", Toast.LENGTH_LONG).show()
-          photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(context, photoPerfil as Uri).toString()), user)
+//          Toast.makeText(context, "Agora ele tem uma nova", Toast.LENGTH_LONG).show()
+          val bitmap = SignUpActivity.getContactBitmapFromURI(it.context, photoPerfil!!)
+
+          val file =
+            SignUpActivity.saveBitmapIntoSDCardImage(it.context, bitmap, "${UUID.randomUUID()}.jpg")
+
+          photoDAO.insert(Photo(UUID.randomUUID(), file.path), user)
         }
 
         val userDAO = UserDAO()
@@ -136,13 +140,11 @@ class ProfileFragment: Fragment() {
       startActivity(intent)
     }
 
-    val photoDAO = PhotoDAO()
-    val photo = photoDAO.findById(user?.photo_id)
-    if (photo == null){
-      Toast.makeText(context, "A foto é nula", Toast.LENGTH_LONG).show()
-    }
-    if (photo != null){ //porque o usuário nao eh obrigado a ter foto =D
-      val myBitmap = BitmapFactory.decodeFile(photo?.path)
+    val photo = photoDAO.findById(user?.photo_id) ?: return
+
+    val file = File(photo.path)
+    if (file.exists()) {
+      val myBitmap = BitmapFactory.decodeFile(file.absolutePath)
       imagePerfil.setImageBitmap(myBitmap)
     }
   }
@@ -162,12 +164,11 @@ class ProfileFragment: Fragment() {
       textViewUserEmail?.text = it
     }
 
-    val photo = photoDAO.findById(user?.photo_id)
-    if (photo == null){
-      Toast.makeText(context, "A foto é nula", Toast.LENGTH_LONG).show()
-    }
-    if (photo != null){ //porque o usuário nao eh obrigado a ter foto =D
-      val myBitmap = BitmapFactory.decodeFile(photo?.path)
+    val photo = photoDAO.findById(user?.photo_id) ?: return
+
+    val file = File(photo.path)
+    if (file.exists()) {
+      val myBitmap = BitmapFactory.decodeFile(file.absolutePath)
       val photoView = headerView?.findViewById<ImageView>(R.id.imagePerfil)
       photoView?.setImageBitmap(myBitmap)
     }

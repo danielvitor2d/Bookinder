@@ -1,5 +1,7 @@
 package com.mobile.bookinder.screens.sign_up
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -9,15 +11,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.mobile.bookinder.common.dao.PhotoDAO
 import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.common.dao.UserDAO
+import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.databinding.ActivitySignUpBinding
-import com.mobile.bookinder.util.URIPathHelper
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
   private lateinit var binding: ActivitySignUpBinding
-  private var photoPerfil: Uri? = null
-  private var uriPath = URIPathHelper()
+  private var uriImage: Uri? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -28,9 +31,8 @@ class SignUpActivity : AppCompatActivity() {
 
   private fun setUpListeners() {
     val selectImage = registerForActivityResult(ActivityResultContracts.GetContent()){
-      photoPerfil = it
-      val myBitmap = BitmapFactory.decodeFile(uriPath.getPath(this, photoPerfil as Uri))
-      binding.imagePerfil.setImageBitmap(myBitmap)
+      uriImage = it
+      binding.imagePerfil.setImageURI(uriImage)
     }
 
     binding.buttonAddPhoto.setOnClickListener {
@@ -50,9 +52,13 @@ class SignUpActivity : AppCompatActivity() {
         val photoDAO = PhotoDAO()
         val booleanInsert = userDao.insert(user)
 
-        if(booleanInsert){
-          if(photoPerfil is Uri){
-            photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, photoPerfil as Uri).toString()), user)
+        if (booleanInsert) {
+          if (uriImage != null) {
+            val bitmap = getContactBitmapFromURI(it.context, uriImage!!)
+
+            val file = saveBitmapIntoSDCardImage(it.context, bitmap, "${UUID.randomUUID()}.jpg")
+
+            photoDAO.insert(Photo(UUID.randomUUID(), file.path), user)
           }
           Toast.makeText(this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show()
           finish()
@@ -65,10 +71,33 @@ class SignUpActivity : AppCompatActivity() {
     }
   }
 
+
+
   fun conditionsInsert(user: User): Boolean{
     if(user.firstname == "" || user.email == "" || user.password == ""){
       return false
     }
     return true
+  }
+
+  companion object {
+    fun getContactBitmapFromURI(context: Context, uri: Uri): Bitmap {
+      val inputStream = context.contentResolver.openInputStream(uri)
+      return BitmapFactory.decodeStream(inputStream)
+    }
+
+    fun saveBitmapIntoSDCardImage(context: Context, bitmap: Bitmap, fname: String): File {
+      val myDir = context.cacheDir
+      myDir.mkdirs()
+
+      val file = File(myDir, fname)
+
+      val fileOutputStream = FileOutputStream(file)
+      bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream)
+      fileOutputStream.flush()
+      fileOutputStream.close()
+
+      return file
+    }
   }
 }
