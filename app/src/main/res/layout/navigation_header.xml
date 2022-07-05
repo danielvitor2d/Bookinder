@@ -31,10 +31,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/imagePerfil"
+                android:id="@+id/imageView3"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/default_avatar_user" />
+                app:srcCompat="@drawable/image_perfil" />
 
         </androidx.cardview.widget.CardView>
 

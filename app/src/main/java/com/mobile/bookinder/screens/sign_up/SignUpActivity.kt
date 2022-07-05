@@ -3,8 +3,11 @@ package com.mobile.bookinder.screens.sign_up
 import android.Manifest
 import android.app.Activity
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,6 +26,7 @@ import com.mobile.bookinder.common.models.User
 import com.mobile.bookinder.databinding.ActivitySignUpBinding
 import com.mobile.bookinder.util.URIPathHelper
 import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
@@ -44,7 +48,7 @@ class SignUpActivity : AppCompatActivity() {
     setContentView(binding.root)
 
     // Inicia pedido de permissão
-    initPermissions()
+    // initPermissions()
 
     setUpListeners();
   }
@@ -92,11 +96,6 @@ class SignUpActivity : AppCompatActivity() {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
   }
 
-  // Códigos dos pedidos
-  companion object {
-    private const val PERMISSION_CODE = 1
-  }
-
   private fun setUpListeners() {
     val selectImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
       if (result.resultCode == Activity.RESULT_OK){
@@ -138,7 +137,7 @@ class SignUpActivity : AppCompatActivity() {
             val progress = (100.0 * uploadTask.bytesTransferred) / uploadTask.totalByteCount
             Log.d(TAG, "Upload is $progress% done")
           }
-          .addOnSuccessListener { taskSnapshot ->
+          .addOnSuccessListener {
             createUser(fieldEmail, fieldPassword, fieldName, "images/${imagePath}")
           }
           .addOnFailureListener { e ->
@@ -174,5 +173,28 @@ class SignUpActivity : AppCompatActivity() {
           Toast.makeText(this, "Erro ao cadastrar novo usuário", Toast.LENGTH_LONG).show()
         }
       }
+  }
+
+  companion object {
+    private const val PERMISSION_CODE = 1
+
+    fun getContactBitmapFromURI(context: Context, uri: Uri): Bitmap {
+      val inputStream = context.contentResolver.openInputStream(uri)
+      return BitmapFactory.decodeStream(inputStream)
+    }
+
+    fun saveBitmapIntoSDCardImage(context: Context, bitmap: Bitmap, fname: String): File {
+      val myDir = context.cacheDir
+      myDir.mkdirs()
+
+      val file = File(myDir, fname)
+
+      val fileOutputStream = FileOutputStream(file)
+      bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream)
+      fileOutputStream.flush()
+      fileOutputStream.close()
+
+      return file
+    }
   }
 }

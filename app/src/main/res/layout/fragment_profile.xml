@@ -113,7 +113,7 @@
             android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/default_avatar_user" />
+            app:srcCompat="@drawable/image_perfil" />
 
     </androidx.cardview.widget.CardView>
 
@@ -142,18 +142,7 @@
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toTopOf="@+id/profileCardViewSaveButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/goToFeedbackButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/blue_grotto"
-            android:text="Ir para Feedback"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/profileCardViewSaveButton"

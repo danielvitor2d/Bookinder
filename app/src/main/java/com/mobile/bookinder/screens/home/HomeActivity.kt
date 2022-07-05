@@ -121,7 +121,7 @@ class HomeActivity: AppCompatActivity() {
       val currentFragment =  supportFragmentManager.findFragmentById(R.id.fragment_container)
       if (currentFragment is FeedFragment) {
         super.onBackPressed()
-      }else{
+      } else {
         supportActionBar?.title = "Feed"
         drawerLayout.closeDrawer(GravityCompat.START)
         supportFragmentManager.beginTransaction().replace(
@@ -165,7 +165,7 @@ class HomeActivity: AppCompatActivity() {
 
         val photoView = headerView.findViewById<ImageView>(R.id.imagePerfil)
 
-        if (user?.photo != null) {
+        if (user?.photo != "") {
           val storageRef = storage.reference
           val imageRef = storageRef.child(user?.photo as String)
           val localFile = File.createTempFile("tmp", "jpg")
@@ -174,8 +174,6 @@ class HomeActivity: AppCompatActivity() {
             .addOnSuccessListener {
               photoView.setImageURI(localFile.toUri())
             }
-        } else {
-          photoView.setImageDrawable(getDrawable(R.drawable.default_avatar_user))
         }
       }
 
