@@ -22,7 +22,6 @@ import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.databinding.FragmentProfileBinding
-import com.mobile.bookinder.screens.feedback.Feedback
 import com.mobile.bookinder.screens.other_profile.OtherProfileActivity
 import com.mobile.bookinder.screens.sign_up.SignUpActivity
 import com.mobile.bookinder.util.URIPathHelper
@@ -37,7 +36,6 @@ class ProfileFragment: Fragment() {
   private lateinit var profileLastNameUser: EditText
   private lateinit var profileEmailUser: EditText
   private lateinit var profileSaveButton: AppCompatButton
-  private lateinit var goToFeedbackButton: AppCompatButton
   private lateinit var imagePerfil: ImageView
   private var photoPerfil: Uri? = null
   private var uriPath = URIPathHelper()
@@ -69,7 +67,6 @@ class ProfileFragment: Fragment() {
     profileLastNameUser = binding.profileLastNameUser
     profileEmailUser = binding.profileEmailUser
     profileSaveButton = binding.profileSaveButton
-    goToFeedbackButton = binding.goToFeedbackButton
     imagePerfil = binding.profileAvatarUser
   }
 
@@ -130,15 +127,15 @@ class ProfileFragment: Fragment() {
         updateHeader()
       }
     }
-    goToFeedbackButton.setOnClickListener {
-//      val intent = Intent(context, Feedback::class.java)
+//    goToFeedbackButton.setOnClickListener {
+////      val intent = Intent(context, Feedback::class.java)
+////      startActivity(intent)
+//      var bundle = Bundle()
+//      bundle.putString("user_id", userDAO.find("teste", "teste")?.user_id.toString())
+//      val intent = Intent(context, OtherProfileActivity::class.java)
+//      intent.putExtras(bundle)
 //      startActivity(intent)
-      var bundle = Bundle()
-      bundle.putString("user_id", userDAO.find("teste", "teste")?.user_id.toString())
-      val intent = Intent(context, OtherProfileActivity::class.java)
-      intent.putExtras(bundle)
-      startActivity(intent)
-    }
+//    }
 
     val photo = photoDAO.findById(user?.photo_id) ?: return
 
