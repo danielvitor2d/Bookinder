@@ -20,14 +20,14 @@ class SettingsFragment: Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
     _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-    var user = loggedUser.getUser()
+    val user = loggedUser.getUser()
 
     binding.updatePassword.setOnClickListener {
-      var senha = binding.editTextPassword.text.toString()
-      var confirmarSenha = binding.editTextConfirmPassword.text.toString()
+      val senha = binding.editTextPassword.text.toString()
+      val confirmarSenha = binding.editTextConfirmPassword.text.toString()
 
       if (senha.equals("") || confirmarSenha.equals("")) {
         Toast.makeText(binding.root.context, "Senha não pode ser vazia!", Toast.LENGTH_SHORT).show()
@@ -42,6 +42,9 @@ class SettingsFragment: Fragment() {
 
           val userDAO = UserDAO()
           userDAO.setUser(user)
+
+          binding.editTextPassword.setText("")
+          binding.editTextConfirmPassword.setText("")
 
           Toast.makeText(context, "Senha alterada com sucesso!", Toast.LENGTH_LONG).show()
         }
