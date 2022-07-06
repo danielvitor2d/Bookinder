@@ -1,26 +1,98 @@
 package com.mobile.bookinder.common.dao
 
+import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.common.model.User
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import java.io.File
 import java.util.*
 
 class UserDAO {
-  fun insert(new_user: User): Boolean{
-    for (user in userList) {
-      if (new_user.email == user.email)
-        return false
-    }
-    userList.add(new_user)
 
-    return true
+  private val auth = Firebase.auth
+  private val storage = Firebase.storage
+  private val db = Firebase.firestore
+
+  val storageRef = storage.reference
+  val imagesRef = storageRef.child("images")
+
+
+  fun insert(fieldName: String, fieldEmail: String, fieldPassword: String, profilePhoto: Uri?, context: Context) {
+    if(fieldPassword.length < 8){
+      Toast.makeText(context, "A senha deve conter no mínimo 8 caracteres", Toast.LENGTH_SHORT).show()
+    }
+
+    if (profilePhoto != null) {
+      val file = profilePhoto
+      val imagePath = "${UUID.randomUUID()}_${File(file.path).name}"
+      val imageRef = imagesRef.child(imagePath)
+      val uploadTask = imageRef.putFile(file)
+      uploadTask
+        .addOnProgressListener { uploadTask ->
+          val progress = (100.0 * uploadTask.bytesTransferred) / uploadTask.totalByteCount
+          Log.d(ContentValues.TAG, "Upload is $progress% done")
+        }
+        .addOnSuccessListener {
+          createUser(fieldEmail, fieldPassword, fieldName, "images/${imagePath}", context)
+        }
+        .addOnFailureListener { e ->
+          Toast.makeText(context, "Erro ao cadastrar imagem (Storage): $e", Toast.LENGTH_SHORT).show()
+        }
+    } else {
+      createUser(fieldEmail, fieldPassword, fieldName, null, context)
+    }
   }
 
-  fun find(email: String, password: String): User? {
-    for (user in userList) {
-      if (user.email == email && user.password == password)
-        return user
-    }
-    return null
+  private fun createUser(email: String, password: String, firstname: String, imageID: String?, context: Context){
+    auth.createUserWithEmailAndPassword(email, password)
+      .addOnCompleteListener {  task ->
+        if (task.isSuccessful) {
+          val user = com.mobile.bookinder.common.models.User(email, firstname)
+
+          if (imageID != null) {
+            user.photo = imageID
+          }
+
+          db.collection("users")
+            .add(user)
+            .addOnSuccessListener { documentReference ->
+              // documentReference
+              Toast.makeText(context, "Usuário cadastrado com sucesso ${documentReference.id}!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+              Toast.makeText(context, "Erro ao cadastrar usuário: $e", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+          Toast.makeText(context, "Erro ao cadastrar novo usuário", Toast.LENGTH_SHORT).show()
+        }
+      }
+  }
+
+  fun findUser(field: String, value: String): com.mobile.bookinder.common.models.User? {
+    var user: com.mobile.bookinder.common.models.User? = null
+
+    db.collection("users")
+      .whereEqualTo(field, value)
+      .get()
+      .addOnSuccessListener {
+        val dados = it.documents[0].data
+        if (dados != null) {
+          user = com.mobile.bookinder.common.models.User(dados.get("email").toString(),
+            dados.get("firstname").toString())
+          if (dados.get("lastname") != null) user!!.lastname = dados.get("lastname").toString()
+          if (dados.get("photo") != null) user!!.photo = dados.get("photo").toString()
+          if (dados.get("books") != null) user!!.books = dados.get("books") as MutableList<String?>
+        }
+      }
+    return user
   }
 
   fun find(user_id: UUID): Boolean{ //saber se o usuário existe

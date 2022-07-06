@@ -1,7 +1,13 @@
 package com.mobile.bookinder.common.dao
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.common.model.User
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 class PhotoDAO {
@@ -51,6 +57,25 @@ class PhotoDAO {
         return photo
     }
     return null
+  }
+
+  fun getContactBitmapFromURI(context: Context, uri: Uri): Bitmap {
+    val inputStream = context.contentResolver.openInputStream(uri)
+    return BitmapFactory.decodeStream(inputStream)
+  }
+
+  fun saveBitmapIntoSDCardImage(context: Context, bitmap: Bitmap, fname: String): File {
+    val myDir = context.cacheDir
+    myDir.mkdirs()
+
+    val file = File(myDir, fname)
+
+    val fileOutputStream = FileOutputStream(file)
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream)
+    fileOutputStream.flush()
+    fileOutputStream.close()
+
+    return file
   }
 
   companion object {
