@@ -38,7 +38,7 @@ class SignUpActivity : AppCompatActivity() {
   private var profilePhoto: Uri? = null
   private var uriPath = URIPathHelper()
 
-  // Variável de chacagem de permissão
+  // Variável de checagem de permissão
   private var check = false
 
   override fun onCreate(savedInstanceState: Bundle?) {

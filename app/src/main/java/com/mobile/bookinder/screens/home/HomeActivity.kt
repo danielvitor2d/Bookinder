@@ -3,6 +3,7 @@ package com.mobile.bookinder.screens.home
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -163,17 +165,21 @@ class HomeActivity: AppCompatActivity() {
           textViewUserEmail.text = it
         }
 
-        val photoView = headerView.findViewById<ImageView>(R.id.imagePerfil)
+        val photoView = headerView.findViewById<ImageView>(R.id.imageView3)
 
-        if (user?.photo != "") {
+        val imageUrl = user?.photo
+        if (imageUrl is String) {
           val storageRef = storage.reference
-          val imageRef = storageRef.child(user?.photo as String)
-          val localFile = File.createTempFile("tmp", "jpg")
+          val imageRef = storageRef.child(imageUrl)
 
-          imageRef.getFile(localFile)
-            .addOnSuccessListener {
-              photoView.setImageURI(localFile.toUri())
-            }
+          imageRef.downloadUrl.addOnSuccessListener {
+            Glide.with(this)
+              .load(it.toString())
+              .centerCrop()
+              .into(photoView)
+          }.addOnFailureListener {
+            Toast.makeText(this, "Erro ao setar imagem de perfil", Toast.LENGTH_SHORT).show()
+          }
         }
       }
 
