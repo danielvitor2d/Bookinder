@@ -111,10 +111,10 @@ class ProfileFragment: Fragment() {
             photoDAO.remove(photo, user)
           }
 //          Toast.makeText(context, "Agora ele tem uma nova", Toast.LENGTH_LONG).show()
-          val bitmap = SignUpActivity.getContactBitmapFromURI(it.context, photoPerfil!!)
+          val bitmap = photoDAO.getContactBitmapFromURI(it.context, photoPerfil!!)
 
           val file =
-            SignUpActivity.saveBitmapIntoSDCardImage(it.context, bitmap, "${UUID.randomUUID()}.jpg")
+            photoDAO.saveBitmapIntoSDCardImage(it.context, bitmap, "${UUID.randomUUID()}.jpg")
 
           photoDAO.insert(Photo(UUID.randomUUID(), file.path), user)
         }

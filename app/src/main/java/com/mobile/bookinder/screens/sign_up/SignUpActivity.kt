@@ -2,7 +2,6 @@ package com.mobile.bookinder.screens.sign_up
 
 import android.Manifest
 import android.app.Activity
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,31 +11,21 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import com.mobile.bookinder.common.models.User
+import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.databinding.ActivitySignUpBinding
-import com.mobile.bookinder.util.URIPathHelper
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
-  private val auth = Firebase.auth
-  private val storage = Firebase.storage
-  private val db = Firebase.firestore
 
   private lateinit var binding: ActivitySignUpBinding
   private var profilePhoto: Uri? = null
-  private var uriPath = URIPathHelper()
+  private val userDAO = UserDAO()
 
   // Variável de checagem de permissão
   private var check = false
@@ -120,81 +109,22 @@ class SignUpActivity : AppCompatActivity() {
       val fieldPassword = binding.editTextPassword.text.toString()
 
       if (fieldName.isEmpty() || fieldEmail.isEmpty() || fieldPassword.isEmpty()) {
-        Toast.makeText(this, "Preencha os campos obrigatórios", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Preencha os campos obrigatórios", Toast.LENGTH_SHORT).show()
         return@setOnClickListener
       }
+      userDAO.insert(fieldName, fieldEmail, fieldPassword, profilePhoto, binding.root.context)
+//      val user = userDAO.findUser("email", fieldEmail)
+//      if(user != null){
+//        finish()
+//      }
 
-      val storageRef = storage.reference
-      val imagesRef = storageRef.child("images")
-
-      if (profilePhoto != null) {
-        val file = profilePhoto as Uri
-        val imagePath = "${UUID.randomUUID()}_${File(file.path).name}"
-        val imageRef = imagesRef.child(imagePath)
-        val uploadTask = imageRef.putFile(file)
-        uploadTask
-          .addOnProgressListener { uploadTask ->
-            val progress = (100.0 * uploadTask.bytesTransferred) / uploadTask.totalByteCount
-            Log.d(TAG, "Upload is $progress% done")
-          }
-          .addOnSuccessListener {
-            createUser(fieldEmail, fieldPassword, fieldName, "images/${imagePath}")
-          }
-          .addOnFailureListener { e ->
-            Toast.makeText(this, "Erro ao cadastrar imagem (Storage): $e", Toast.LENGTH_SHORT).show()
-          }
-      } else {
-        createUser(fieldEmail, fieldPassword, fieldName, null)
-      }
     }
   }
 
-  private fun createUser(email: String, password: String, firstname: String, imageID: String?) {
-    auth.createUserWithEmailAndPassword(email, password)
-      .addOnCompleteListener(this) { task ->
-        if (task.isSuccessful) {
-          val user = User(email, firstname)
 
-          if (imageID != null) {
-            user.photo = imageID
-          }
-
-          db.collection("users")
-            .add(user)
-            .addOnSuccessListener { documentReference ->
-              // documentReference
-              Toast.makeText(this, "Usuário cadastrado com sucesso ${documentReference.id}!", Toast.LENGTH_SHORT).show()
-              finish()
-            }
-            .addOnFailureListener { e ->
-              Toast.makeText(this, "Erro ao cadastrar usuário: $e", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-          Toast.makeText(this, "Erro ao cadastrar novo usuário", Toast.LENGTH_LONG).show()
-        }
-      }
-  }
 
   companion object {
     private const val PERMISSION_CODE = 1
 
-    fun getContactBitmapFromURI(context: Context, uri: Uri): Bitmap {
-      val inputStream = context.contentResolver.openInputStream(uri)
-      return BitmapFactory.decodeStream(inputStream)
-    }
-
-    fun saveBitmapIntoSDCardImage(context: Context, bitmap: Bitmap, fname: String): File {
-      val myDir = context.cacheDir
-      myDir.mkdirs()
-
-      val file = File(myDir, fname)
-
-      val fileOutputStream = FileOutputStream(file)
-      bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream)
-      fileOutputStream.flush()
-      fileOutputStream.close()
-
-      return file
-    }
   }
 }
