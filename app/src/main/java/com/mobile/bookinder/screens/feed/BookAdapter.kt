@@ -34,7 +34,7 @@ class BookAdapter(private val books: MutableList<Book>, private val feedCardBook
     holder.bookAuthor.text = "Autor(a): ${books[position].author}"
     holder.gender.text = "Gênero: ${books[position].gender}"
 
-    val photoUuid = books[position].photos[0]
+    val photoUuid = books[position].photos?.get(0)
 
     if(photoUuid != null){
       val photoDAO = PhotoDAO()
@@ -56,7 +56,7 @@ class BookAdapter(private val books: MutableList<Book>, private val feedCardBook
         feedCardBookEvent.likeBook(books[position], position)
         holder.likeBook.setImageResource(R.drawable.ic_filled_star)
       }else{//entao deslike
-        val like = likeDAO.findLike(user_id!!, book_id)
+        val like = book_id?.let { it1 -> likeDAO.findLike(user_id!!, it1) }
         feedCardBookEvent.deslikeBook(books[position], position, like)
         holder.likeBook.setImageResource(R.drawable.ic_star)
       }

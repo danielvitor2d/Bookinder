@@ -1,16 +1,16 @@
 package com.mobile.bookinder.common.model
 
-import java.util.*
+import java.io.Serializable
 
-class Book(
-  var book_id: UUID,
-  var title: String,
-  var author: String,
-  var gender: String,
-  var synopsis: String,
-  var owner: UUID?,
-  var photos: MutableList<UUID>
-) {
-  constructor(_book_id: UUID, _title: String, _author: String, _gender: String, _synopsis: String, _owner: UUID?) :
+data class Book(
+  var book_id: String? = null,
+  var title: String? = null,
+  var author: String? = null,
+  var gender: String? = null,
+  var synopsis: String? = null,
+  var owner: String? = null,
+  var photos: MutableList<String>? = mutableListOf()
+) : Serializable {
+  constructor(_book_id: String, _title: String, _author: String, _gender: String, _synopsis: String, _owner: String?) :
     this(_book_id, _title, _author, _gender, _synopsis, _owner, mutableListOf())
 }

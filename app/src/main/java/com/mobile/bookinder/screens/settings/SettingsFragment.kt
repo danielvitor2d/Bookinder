@@ -38,7 +38,7 @@ class SettingsFragment: Fragment() {
         Toast.makeText(binding.root.context, "Senhas diferentes!", Toast.LENGTH_SHORT).show()
       } else {
         if (user != null) {
-          user.password = senha
+//          user.password = senha
 
           val userDAO = UserDAO()
           userDAO.setUser(user)
