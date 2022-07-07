@@ -27,9 +27,14 @@ class SignInActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    if (auth.currentUser != null){
+      val intent = Intent(this, HomeActivity::class.java)
+      startActivity(intent)
+      finish()
+    }
+
     binding = ActivitySignInBinding.inflate(layoutInflater)
     setContentView(binding.root)
-
     setUpListeners()
   }
 
