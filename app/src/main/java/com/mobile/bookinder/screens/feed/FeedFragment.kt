@@ -82,9 +82,12 @@ class FeedFragment: Fragment(), FeedCardBookEvent {
   }
 
   override fun likeBook(book: Book, position: Int) {
-    val like = Like(UUID.randomUUID(), loggedUser.getUser()?.user_id!!, book.owner!!, book.book_id, Date(), null)
-    likeDAO.insert(like)
-    matchDAO.likeMacth(like)
+    val like = book.book_id?.let {
+      Like(UUID.randomUUID().toString(), loggedUser.getUser()?.user_id!!, book.owner!!,
+        it, Date(), null)
+    }
+//    likeDAO.insert(like)
+//    matchDAO.likeMacth(like)
   }
 
   override fun deslikeBook(book: Book, position: Int, like: Like?) {

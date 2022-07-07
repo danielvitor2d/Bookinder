@@ -13,7 +13,7 @@ class BookDAO {
       if (new_book.book_id == book.book_id)
         return false
     }
-    userDAO.insertBook(user, new_book.book_id)
+    userDAO.insertBook(user, new_book.book_id.toString())
     bookList.add(new_book)
 
     return true
@@ -28,7 +28,7 @@ class BookDAO {
     return findBooks
   }
 
-  fun findId(id: UUID?): Book?{
+  fun findId(id: String?): Book?{
     for (book in bookList) {
       if (book.book_id == id)
         return book
@@ -36,16 +36,7 @@ class BookDAO {
     return null
   }
 
-  fun findId(id: String?): Book?{
-    for (book in bookList) {
-      val current_book = book.book_id.toString()
-      if (current_book.equals(id))
-        return book
-    }
-    return null
-  }
-
-  fun alterBook(book: Book, title: String, author: String, gender: String, synopsis: String, photos: MutableList<UUID>){
+  fun alterBook(book: Book, title: String, author: String, gender: String, synopsis: String, photos: MutableList<String>){
     book.title = title
     book.author = author
     book.gender = gender
@@ -53,36 +44,13 @@ class BookDAO {
     book.photos = photos
   }
 
-  fun deletePhotos(book: Book){
-    val photos = book.photos
-    val photoDAO = PhotoDAO()
-    for (p in photos){
-      photoDAO.removePhotoBook(p)
-    }
-    book.photos.clear()
-  }
-
-  fun removeBook(book: Book, user: User?): Boolean{
-    val book = findId(book.book_id)
-    if (book != null && user != null){
-      user.books?.remove(book.book_id)
-      bookList.remove(book)
-      return true
-    }
-    return false
-  }
-
-  fun allByUser(user_id: UUID?): MutableList<Book>{
+  fun allByUser(user_id: String?): MutableList<Book>{
     return bookList.filter { it.owner == user_id } as MutableList<Book>
   }
 
-  fun addPhoto(book_id: UUID, photo_id: UUID){
+  fun addPhoto(book_id: String, photo_id: String){
     val book = findId(book_id)
     book?.photos?.add(photo_id)
-  }
-
-  fun all(): MutableList<Book>{
-    return bookList
   }
 
   fun allExcludeUserBooks(user: User?): MutableList<Book>{
@@ -90,14 +58,14 @@ class BookDAO {
     val books: MutableList<Book> = mutableListOf()
 
     for (book in bookList){
-      if(user_books?.contains(book.book_id) == false){
+      if(user_books?.contains(book.book_id.toString()) == false){
         books.add(book)
       }
     }
     return books
   }
 
-  fun setBook(book_id: UUID?, _book: Book) {
+  fun setBook(book_id: String?, _book: Book) {
     for (i in 0 until bookList.size) {
       if (bookList[i].book_id == book_id) {
         bookList[i] = _book

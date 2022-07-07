@@ -1,15 +1,12 @@
 package com.mobile.bookinder.screens.home
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
@@ -19,8 +16,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.mobile.bookinder.R
-import com.mobile.bookinder.common.dao.PhotoDAO
-import com.mobile.bookinder.common.models.User
+import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.databinding.ActivityHomeBinding
 import com.mobile.bookinder.screens.feed.FeedFragment
 import com.mobile.bookinder.screens.likes.LikesFragment
@@ -29,9 +25,8 @@ import com.mobile.bookinder.screens.my_books.MyBooksFragment
 import com.mobile.bookinder.screens.profile.ProfileFragment
 import com.mobile.bookinder.screens.settings.SettingsFragment
 import com.mobile.bookinder.screens.sign_in.SignInActivity
-import java.io.File
 
-class HomeActivity: AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
   private val auth = Firebase.auth
   private val db = Firebase.firestore
   private val storage = Firebase.storage
@@ -42,9 +37,11 @@ class HomeActivity: AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    
+
     binding = ActivityHomeBinding.inflate(layoutInflater)
     setContentView(binding.root)
+
+    val user = intent.getSerializableExtra("user") as User
 
     supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
       FeedFragment()).commit()
@@ -55,7 +52,7 @@ class HomeActivity: AppCompatActivity() {
     navigationView = binding.navigationView
 
     navigationView.setNavigationItemSelectedListener {
-      when(it.itemId) {
+      when (it.itemId) {
         R.id.feed_menu -> {
           supportActionBar?.title = "Feed"
           drawerLayout.closeDrawer(GravityCompat.START)
@@ -93,6 +90,7 @@ class HomeActivity: AppCompatActivity() {
             SettingsFragment()).commit()
         }
         R.id.logout_item -> {
+          auth.signOut()
           val intent = Intent(this, SignInActivity::class.java)
           startActivity(intent)
           finish()
@@ -101,26 +99,31 @@ class HomeActivity: AppCompatActivity() {
       return@setNavigationItemSelectedListener true
     }
 
-    val toggle = ActionBarDrawerToggle(this, drawerLayout, binding.appbar.toolbar, R.string.open_drawer, R.string.close_drawer)
+    val toggle = ActionBarDrawerToggle(this,
+      drawerLayout,
+      binding.appbar.toolbar,
+      R.string.open_drawer,
+      R.string.close_drawer)
 
     drawerLayout.addDrawerListener(toggle)
 
     toggle.syncState()
 
-    updateHeader()
-
     val headerView = navigationView.getHeaderView(0)
-    val imageViewCloseNavigationView = headerView.findViewById<ImageView>(R.id.imageViewCloseNavigationView)
+    val imageViewCloseNavigationView =
+      headerView.findViewById<ImageView>(R.id.imageViewCloseNavigationView)
     imageViewCloseNavigationView.setOnClickListener {
       drawerLayout.closeDrawer(GravityCompat.START)
     }
+
+    updateHeader(user)
   }
 
   override fun onBackPressed() {
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
-      val currentFragment =  supportFragmentManager.findFragmentById(R.id.fragment_container)
+      val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
       if (currentFragment is FeedFragment) {
         super.onBackPressed()
       } else {
@@ -134,54 +137,32 @@ class HomeActivity: AppCompatActivity() {
     }
   }
 
-  fun updateHeader() {
-    val loggedUser = auth.currentUser
+  fun updateHeader(user: User) {
+    val headerView = navigationView.getHeaderView(0)
 
-    var user: User? = null
+    val textViewUserName = headerView.findViewById<TextView>(R.id.textViewUserName)
+    "${user.firstname} ${user.lastname}".also {
+      textViewUserName.text = it
+    }
 
-    db.collection("users")
-      .whereEqualTo("email", loggedUser?.email)
-      .get()
-      .addOnSuccessListener {
-        val dados = it.documents[0].data
-        if (dados != null) {
-          user = User(dados.get("email").toString(), dados.get("firstname").toString())
-          if (dados.get("lastname") != null) user!!.lastname = dados.get("lastname").toString()
-          if (dados.get("photo") != null) user!!.photo = dados.get("photo").toString()
-          if (dados.get("books") != null) user!!.books = dados.get("books") as MutableList<String?>
-        }
-        Toast.makeText(this, "${dados}", Toast.LENGTH_LONG).show()
-        Toast.makeText(this, "$user", Toast.LENGTH_LONG).show()
+    val textViewUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
+    user.email.also {
+      textViewUserEmail.text = it
+    }
 
-        val headerView = navigationView.getHeaderView(0)
+    val photoView = headerView.findViewById<ImageView>(R.id.imageView3)
 
-        val textViewUserName = headerView.findViewById<TextView>(R.id.textViewUserName)
-        "${user?.firstname} ${user?.lastname}".also {
-          textViewUserName.text = it
-        }
+    val imageUrl = user.photo as String
+    if (imageUrl.isNotEmpty()) {
+      val storageRef = storage.reference
+      val imageRef = storageRef.child(imageUrl)
 
-        val textViewUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
-        "${user?.email}".also {
-          textViewUserEmail.text = it
-        }
-
-        val photoView = headerView.findViewById<ImageView>(R.id.imageView3)
-
-        val imageUrl = user?.photo
-        if (imageUrl is String) {
-          val storageRef = storage.reference
-          val imageRef = storageRef.child(imageUrl)
-
-          imageRef.downloadUrl.addOnSuccessListener {
-            Glide.with(this)
-              .load(it.toString())
-              .centerCrop()
-              .into(photoView)
-          }.addOnFailureListener {
-            Toast.makeText(this, "Erro ao setar imagem de perfil", Toast.LENGTH_SHORT).show()
-          }
-        }
+      imageRef.downloadUrl.addOnSuccessListener {
+        Glide.with(this)
+          .load(it.toString())
+          .centerCrop()
+          .into(photoView)
       }
-
+    }
   }
 }

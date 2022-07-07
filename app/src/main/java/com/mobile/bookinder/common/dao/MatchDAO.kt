@@ -20,7 +20,7 @@ class MatchDAO {
 
     for (i in LikeDAO.likeList){
       if(i.user_id_from == userTo && i.book_id_to == userFrom){
-        val match = Match(UUID.randomUUID(), like.book_id_to, i.like_id, like.user_id_from, i.user_id_from, like.like_id, i.like_id, null, null, Date())
+        val match = Match(UUID.randomUUID().toString(), like.book_id_to, i.like_id, like.user_id_from, i.user_id_from, like.like_id, i.like_id, null, null, Date())
         matchList.add(match)
       }
     }

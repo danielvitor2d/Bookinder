@@ -3,10 +3,12 @@ package com.mobile.bookinder.screens.sign_in
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.mobile.bookinder.common.model.LoggedUser
@@ -15,22 +17,35 @@ import com.mobile.bookinder.databinding.ActivitySignInBinding
 import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.screens.home.HomeActivity
 import com.mobile.bookinder.screens.sign_up.SignUpActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class SignInActivity : AppCompatActivity() {
   private val auth = Firebase.auth
-//  private val storage = Firebase.storage
-//  private val db = Firebase.firestore
+  private val db = Firebase.firestore
 
   private lateinit var binding: ActivitySignInBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    if (auth.currentUser != null){
-      val intent = Intent(this, HomeActivity::class.java)
-      startActivity(intent)
-      finish()
+    if (auth.currentUser != null) {
+      db.collection("users").whereEqualTo("email", auth.currentUser?.email)
+        .get()
+        .addOnSuccessListener { result ->
+          val user = result.documents[0].toObject<User>()
+
+          val bundle = Bundle()
+          bundle.putSerializable("user", user)
+
+          val intent = Intent(this, HomeActivity::class.java)
+          intent.putExtras(bundle)
+
+          startActivity(intent)
+          finish()
+        }
     }
 
     binding = ActivitySignInBinding.inflate(layoutInflater)
@@ -51,34 +66,32 @@ class SignInActivity : AppCompatActivity() {
       auth.signInWithEmailAndPassword(fieldEmail, fieldPassword)
         .addOnCompleteListener(this) { task ->
           if (task.isSuccessful) {
-            Toast.makeText(this, "Usuário logado com sucesso!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
+            GlobalScope.launch {
+              val bundle = Bundle()
+
+              val resultQuery = db.collection("users")
+                .whereEqualTo("email", auth.currentUser?.email)
+                .get()
+                .await()
+
+              if (resultQuery.documents.size > 0 && resultQuery.documents[0].exists()) {
+                val user = resultQuery.documents[0].toObject<User>()
+                Log.d("User: ", user.toString())
+
+                bundle.putSerializable("user", user)
+
+                val intent = Intent(applicationContext, HomeActivity::class.java)
+                intent.putExtras(bundle)
+
+                startActivity(intent)
+                finish()
+              }
+            }
+
           } else {
             Toast.makeText(this, "E-mail e/ou senha inválidos", Toast.LENGTH_SHORT).show()
           }
         }
-
-//      // Create a new user with a first and last name
-//      val user = hashMapOf(
-//        "first" to "Alan",
-//        "middle" to "Mathison",
-//        "last" to "Turing",
-//        "born" to 1912
-//      )
-//
-//      // Add a new document with a generated ID
-//      db.collection("users")
-//        .add(user)
-//        .addOnSuccessListener { documentReference ->
-//          Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-//          Toast.makeText(this, "Documento adicionado com ID: ${documentReference.id}", Toast.LENGTH_LONG).show()
-//        }
-//        .addOnFailureListener { e ->
-//          Log.w(TAG, "Error adding document", e)
-//          Toast.makeText(this, "Erro ao adicionar documento: $e!", Toast.LENGTH_LONG).show()
-//        }
     }
 
     binding.signUpText.setOnClickListener {

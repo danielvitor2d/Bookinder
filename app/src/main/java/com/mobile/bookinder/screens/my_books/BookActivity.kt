@@ -13,8 +13,6 @@ import com.mobile.bookinder.databinding.ActivityBookBinding
 class BookActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityBookBinding
-  private val bookDAO = BookDAO()
-  private val userDAO = UserDAO()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -22,9 +20,8 @@ class BookActivity : AppCompatActivity() {
     setContentView(binding.root)
 
     val bookId = intent.getStringExtra("book_id")
-    val book = bookDAO.findId(bookId)
-    val user = userDAO.getById(book?.owner)
-    setUpListeners(book, user)
+
+//    setUpListeners(book, user)
   }
 
   private fun setUpListeners(book: Book?, user: User?) {
@@ -41,10 +38,10 @@ class BookActivity : AppCompatActivity() {
     val myBitmap = BitmapFactory.decodeFile(coverPhoto?.path)
     binding.bookCover.setImageBitmap(myBitmap)
 
-    if (user?.photo_id != null){
-      val profilePhoto = photoDAO.findById(user?.photo_id)
-      val myBitmap2 = BitmapFactory.decodeFile(profilePhoto?.path)
-      binding.profilePhoto.setImageBitmap(myBitmap2)
+    if (user?.photo != null){
+//      val profilePhoto = photoDAO.findById(user?.photo)
+//      val myBitmap2 = BitmapFactory.decodeFile(profilePhoto?.path)
+//      binding.profilePhoto.setImageBitmap(myBitmap2)
     }
   }
 }

@@ -1,13 +1,19 @@
 package com.mobile.bookinder.screens.my_books
 
+import android.content.ContentValues
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.mobile.bookinder.common.dao.BookDAO
 import com.mobile.bookinder.common.dao.PhotoDAO
 import com.mobile.bookinder.common.model.Book
@@ -15,17 +21,26 @@ import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.databinding.ActivityRegisterBookBinding
 import com.mobile.bookinder.util.URIPathHelper
-import java.net.URI
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.util.*
 
 class RegisterBook : AppCompatActivity() {
 
   private lateinit var binding: ActivityRegisterBookBinding
-  private val loggedUser = LoggedUser()
   private var currentImages: MutableList<Uri> = mutableListOf()
   private var bookCoverUri: Uri? = null
   private var backCoverUri: Uri? = null
   val genders = arrayOf("Romântico", "Ficção científica", "Fantasia", "Conto", "Terror", "Aventura")
+
+  private var db = Firebase.firestore
+  private var auth = Firebase.auth
+  private var storage = Firebase.storage
+
+  private var storageRef = storage.reference
+  private var imagesRef = storageRef.child("images")
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -35,44 +50,29 @@ class RegisterBook : AppCompatActivity() {
   }
 
   private fun setUpListeners() {
-    //pegando imagens
-    var text = ""
-    val imageBookCover = registerForActivityResult(ActivityResultContracts.GetContent()){
-     bookCoverUri = it
-      text += "- ${it}\n"
-      binding.tvImageList.text = text
+    val imageBookCover = registerForActivityResult(ActivityResultContracts.GetContent()) {
+      bookCoverUri = it
     }
 
-    val imageBackCover = registerForActivityResult(ActivityResultContracts.GetContent()){
+    val imageBackCover = registerForActivityResult(ActivityResultContracts.GetContent()) {
       backCoverUri = it
-      text += "- ${it}\n"
-      binding.tvImageList.text = text
     }
 
-    val imageBookPages = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){
+    val imageBookPages = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
       currentImages = it
-
-      for(uri in currentImages){
-        text += "- ${uri}\n"
-      }
-
-      binding.tvImageList.text = text
     }
 
-    //pegando o genero
     val spinner = binding.spinner
     var fieldGender = ""
-    val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, genders)
+    val arrayAdapter =
+      ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, genders)
     spinner.adapter = arrayAdapter
-    spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+    spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
       override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         fieldGender = genders[p2]
       }
 
-      override fun onNothingSelected(p0: AdapterView<*>?) {
-        TODO("Not yet implemented")
-      }
-
+      override fun onNothingSelected(p0: AdapterView<*>?) {}
     }
 
     binding.buttonBookPages.setOnClickListener {
@@ -82,6 +82,7 @@ class RegisterBook : AppCompatActivity() {
     binding.buttonBookCover.setOnClickListener {
       imageBookCover.launch("image/*")
     }
+
     binding.buttonBackCover.setOnClickListener {
       imageBackCover.launch("image/*")
     }
@@ -90,44 +91,71 @@ class RegisterBook : AppCompatActivity() {
       val fieldTitle = binding.editTextTitle.text.toString()
       val fieldAuthor = binding.editTextAuthor.text.toString()
       val fieldSynopsis = binding.editTextSynopsis.text.toString()
-      val user = loggedUser.getUser()
+
       val check = fieldChecklist(fieldTitle, fieldAuthor, bookCoverUri)
 
-      if (user != null && check) {
-        val book = Book(UUID.randomUUID(), fieldTitle, fieldAuthor, fieldGender, fieldSynopsis, user.user_id)
-        val bookDAO = BookDAO()
-        bookDAO.insert(book, user)
+      if (check) {
 
-        val photoDAO = PhotoDAO()
-        val uriPath = URIPathHelper()
-        photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, bookCoverUri as Uri).toString()), book.book_id)
-        if(backCoverUri is Uri){
-          photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, backCoverUri as Uri).toString()), book.book_id)
-        }
-        for(uri in currentImages){
-          photoDAO.insert(Photo(UUID.randomUUID(), uriPath.getPath(this, uri).toString()), book.book_id)
+        val listOfPhotos = mutableListOf<String>()
+
+        if (bookCoverUri != null && bookCoverUri?.path?.isNotEmpty() == true) {
+          val imagePath = "${UUID.randomUUID()}_${bookCoverUri!!.path?.let { path -> File(path).name }}"
+          listOfPhotos.add("images/$imagePath")
+          val imageRef = imagesRef.child(imagePath)
+          val uploadTask = imageRef.putFile(bookCoverUri!!)
+          GlobalScope.launch {
+            uploadTask.await()
+          }
         }
 
-        Toast.makeText(this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show()
-        finish()
-      }else{
+        if (backCoverUri != null && backCoverUri?.path?.isNotEmpty() == true) {
+          val imagePath = "${UUID.randomUUID()}_${backCoverUri!!.path?.let { path -> File(path).name }}"
+          listOfPhotos.add("images/$imagePath")
+          val imageRef = imagesRef.child(imagePath)
+          val uploadTask = imageRef.putFile(backCoverUri!!)
+          GlobalScope.launch {
+            uploadTask.await()
+          }
+        }
+
+        for (uri in currentImages) {
+          if (uri.path?.isNotEmpty() == true) {
+            val imagePath = "${UUID.randomUUID()}_${uri.path?.let { path -> File(path).name }}"
+            listOfPhotos.add("images/$imagePath")
+            val imageRef = imagesRef.child(imagePath)
+            val uploadTask = imageRef.putFile(uri)
+            GlobalScope.launch {
+              uploadTask.await()
+            }
+          }
+        }
+
+        val book = Book(UUID.randomUUID().toString(),
+          fieldTitle,
+          fieldAuthor,
+          fieldGender,
+          fieldSynopsis,
+          auth.currentUser?.uid,
+          listOfPhotos)
+
+        book.book_id?.let { id ->
+          db.collection("books").document(id).set(book).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+              Toast.makeText(this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show()
+              finish()
+            } else {
+              Toast.makeText(this, "Erro ao cadastrar livro", Toast.LENGTH_LONG).show()
+            }
+          }
+        }
+
+      } else {
         Toast.makeText(this, "Preencha os campos obrigatórios", Toast.LENGTH_LONG).show()
       }
     }
   }
 
-  private fun fieldChecklist(title: String, author: String, bookCover: Uri?): Boolean{
-    if(title.equals("") || author.equals("") || bookCover == null){
-      return false
-    }
-    return true
-  }
-
-  override fun onPause() {
-    super.onPause()
-  }
-
-  override fun onStop() {
-    super.onStop()
+  private fun fieldChecklist(title: String, author: String, bookCover: Uri?): Boolean {
+    return !(title.isEmpty() || author.isEmpty() || bookCover == null)
   }
 }

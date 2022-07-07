@@ -2,10 +2,10 @@ package com.mobile.bookinder.screens.profile
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -27,23 +27,19 @@ import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.mobile.bookinder.R
-import com.mobile.bookinder.common.dao.PhotoDAO
-import com.mobile.bookinder.common.dao.UserDAO
-import com.mobile.bookinder.common.model.LoggedUser
-import com.mobile.bookinder.common.model.Photo
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.mobile.bookinder.common.models.User
+import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.databinding.FragmentProfileBinding
-import com.mobile.bookinder.screens.other_profile.OtherProfileActivity
-import com.mobile.bookinder.util.URIPathHelper
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.util.*
 
-class ProfileFragment: Fragment() {
+class ProfileFragment : Fragment() {
   private var _binding: FragmentProfileBinding? = null
   private val binding get() = _binding!!
 
@@ -53,32 +49,26 @@ class ProfileFragment: Fragment() {
   private lateinit var profileSaveButton: AppCompatButton
   private lateinit var imagePerfil: ImageView
   private var profilePhoto: Uri? = null
-  private var uriPath = URIPathHelper()
-  private val photoDAO = PhotoDAO()
-  private val userDAO = UserDAO()
   private var user: User? = null
 
   private val auth = Firebase.auth
   private val db = Firebase.firestore
   private val storage = Firebase.storage
-  private lateinit var database: DatabaseReference
-  var loggedUser = auth.currentUser
+
+  private val storageRef = storage.reference
+  private val imagesRef = storageRef.child("images")
 
   // Variável de checagem de permissão
-  private var check = false
-
-  fun initializeDbRef() {
-    // [START initialize_database_ref]
-    database = Firebase.database.reference
-    // [END initialize_database_ref]
-  }
+  private var permissionEnabled: Boolean = false
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
+    savedInstanceState: Bundle?,
+  ): View {
     _binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+    permissionEnabled = getPermission()
 
     setUpViews()
     setUpLoggedUser()
@@ -88,9 +78,9 @@ class ProfileFragment: Fragment() {
   }
 
   // Checa se existe ou não permissão
-  private fun initPermissions(){
-    if(!getPermission()) setPermission()
-    else check = true
+  private fun initPermissions() {
+    if (!getPermission()) setPermission()
+    else permissionEnabled = true
   }
 
   // Checa se existe permissão
@@ -100,12 +90,12 @@ class ProfileFragment: Fragment() {
       Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
 
   // Pede permissão se não tiver
-  private fun setPermission(){
+  private fun setPermission() {
     val permissionsList = listOf<String>(
       Manifest.permission.READ_EXTERNAL_STORAGE,
     )
     ActivityCompat.requestPermissions(this.context as Activity, permissionsList.toTypedArray(),
-      ProfileFragment.PERMISSION_CODE)
+      PERMISSION_CODE)
   }
 
   // Envia mensagem por não ter permissão
@@ -117,22 +107,21 @@ class ProfileFragment: Fragment() {
   override fun onRequestPermissionsResult(
     requestCode: Int,
     permissions: Array<out String>,
-    grantResults: IntArray
+    grantResults: IntArray,
   ) {
-    when(requestCode){
-      ProfileFragment.PERMISSION_CODE -> {
+    when (requestCode) {
+      PERMISSION_CODE -> {
         if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
           errorPermission()
         } else {
-          check = true
+          permissionEnabled = true
         }
       }
     }
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
   }
 
-
-  override fun onDestroyView(){
+  override fun onDestroyView() {
     super.onDestroyView()
     _binding = null
   }
@@ -147,23 +136,14 @@ class ProfileFragment: Fragment() {
 
   private fun setUpLoggedUser() {
     db.collection("users")
-      .whereEqualTo("email", loggedUser?.email)
+      .whereEqualTo("email", auth.currentUser?.email)
       .get()
-      .addOnSuccessListener {
-        val dados = it.documents[0].data
-
-        if (dados != null) {
-          user = User(dados.get("email").toString(), dados.get("firstname").toString())
-          user?.id = it.documents[0].reference.id
-          if (dados.get("lastname") != null) user!!.lastname = dados.get("lastname").toString()
-          if (dados.get("photo") != null) user!!.photo = dados.get("photo").toString()
-          if (dados.get("books") != null) user!!.books = dados.get("books") as MutableList<String?>
-        }
+      .addOnSuccessListener { query ->
+        user = query.documents[0].toObject<User>()
 
         profileFirstNameUser.setText(user?.firstname)
         profileLastNameUser.setText(user?.lastname)
         profileEmailUser.setText(user?.email)
-
 
         val imageUrl = user?.photo
         if (imageUrl is String) {
@@ -175,8 +155,6 @@ class ProfileFragment: Fragment() {
               .load(it.toString())
               .centerCrop()
               .into(imagePerfil)
-          }.addOnFailureListener {
-            Toast.makeText(context, "Erro ao setar imagem de perfil", Toast.LENGTH_SHORT).show()
           }
         }
       }
@@ -194,7 +172,7 @@ class ProfileFragment: Fragment() {
     binding.buttonAlterPhoto.setOnClickListener {
       val intent = Intent(Intent.ACTION_PICK,
         MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-      if (check) {
+      if (permissionEnabled) {
         selectImage.launch(intent)
       } else {
         initPermissions()
@@ -216,17 +194,43 @@ class ProfileFragment: Fragment() {
         "lastname" to lastname
       )
 
+      var imagePath = ""
+      if (profilePhoto != null && profilePhoto!!.path != null && profilePhoto!!.path?.isNotEmpty() == true) {
+        imagePath = "${UUID.randomUUID()}_${profilePhoto!!.path?.let { path -> File(path).name }}"
+        updates["photo"] = "images/$imagePath"
+        val imageRef = imagesRef.child(imagePath)
+        val uploadTask = imageRef.putFile(profilePhoto!!)
+        val lastPhotoRef = user?.photo?.let { lastPhoto -> storageRef.child(lastPhoto) }
+        val removeTask = lastPhotoRef?.delete()
+        GlobalScope.launch {
+          try {
+            removeTask?.await()
+            uploadTask.await()
+          } catch(ex: Exception) {
+            ex.message?.let { err -> Log.d("Error: ", err) }
+          }
+        }
+      }
+
+      val userId = user?.user_id as String
+
       db.collection("users")
-        .document(user!!.id)
+        .document(userId)
         .update(updates)
         .addOnSuccessListener {
-          Toast.makeText(context, "Usuário atualizado com sucesso!", Toast.LENGTH_LONG).show()
+          Toast.makeText(context, "Usuário atualizado com sucesso", Toast.LENGTH_LONG).show()
 
-          val headerView = activity?.findViewById<NavigationView>(R.id.navigation_view)?.getHeaderView(0)
+          val headerView =
+            activity?.findViewById<NavigationView>(R.id.navigation_view)?.getHeaderView(0)
           val textViewUserName = headerView?.findViewById<TextView>(R.id.textViewUserName)
-          textViewUserName?.setText("${firstname} ${lastname}")
-        }.addOnFailureListener {
-          Toast.makeText(context, "Não foi possível atualizar", Toast.LENGTH_LONG).show()
+          "$firstname $lastname".also { textViewUserName?.text = it }
+
+          val photoView = headerView?.findViewById(R.id.imageView3) as ImageView
+
+          if (imagePath.isNotEmpty()) {
+            Log.d("Aqui: ", "Daniel V -> $imagePath")
+            photoView.setImageURI(profilePhoto)
+          }
         }
     }
   }

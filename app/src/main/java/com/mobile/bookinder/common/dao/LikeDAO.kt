@@ -18,7 +18,7 @@ class LikeDAO {
     return true
   }
 
-  fun allByUser(user_id: UUID?): MutableList<Like> {
+  fun allByUser(user_id: String?): MutableList<Like> {
     return likeList.filter { it.user_id_to == user_id } as MutableList<Like>
   }
 
@@ -28,7 +28,7 @@ class LikeDAO {
     }
   }
 
-  fun findLike(user_id: UUID, book_id: UUID): Like?{
+  fun findLike(user_id: String, book_id: String): Like?{
     for (like in likeList){
       if (like.user_id_from == user_id && like.book_id_to == book_id){
         return like
@@ -37,8 +37,8 @@ class LikeDAO {
     return null
   }
 
-  fun booksILiked(user_id: UUID?): MutableList<UUID> { //retorna os livros que curti =D
-    val booksUuid: MutableList<UUID> = mutableListOf()
+  fun booksILiked(user_id: String?): MutableList<String> { //retorna os livros que curti =D
+    val booksUuid: MutableList<String> = mutableListOf()
     for (like in likeList){
       if(like.user_id_from == user_id){
         booksUuid.add(like.book_id_to)

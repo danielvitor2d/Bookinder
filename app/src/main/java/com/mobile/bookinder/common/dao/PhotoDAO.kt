@@ -11,7 +11,7 @@ import java.io.FileOutputStream
 import java.util.*
 
 class PhotoDAO {
-  fun insert(new_photo: Photo, book_id: UUID): Boolean{
+  fun insert(new_photo: Photo, book_id: String): Boolean{
     val bookDAO = BookDAO()
     for (photo in photoList) {
       if (photo.photo_id == new_photo.photo_id)
@@ -24,26 +24,7 @@ class PhotoDAO {
     return true
   }
 
-  fun insert(new_photo: Photo, user: User): Boolean{
-    val userDAO = UserDAO()
-    if (userDAO.find(user.user_id)){
-      for (photo in photoList) {
-        if (photo.photo_id == new_photo.photo_id)
-          return false
-      }
-      userDAO.insertPhoto(user, new_photo)
-      photoList.add(new_photo)
-      return true
-    }
-    return false
-  }
-
-  fun remove(photo: Photo, user: User){
-    user.photo_id = null
-    photoList.remove(photo)
-  }
-
-  fun removePhotoBook(photo: UUID){
+  fun removePhotoBook(photo: String){
     for (p in photoList){
       if (p.photo_id == photo){
         photoList.remove(p)
@@ -51,7 +32,7 @@ class PhotoDAO {
     }
   }
 
-  fun findById(id: UUID?) : Photo?{
+  fun findById(id: String?) : Photo?{
     for (photo in photoList) {
       if (photo.photo_id == id)
         return photo

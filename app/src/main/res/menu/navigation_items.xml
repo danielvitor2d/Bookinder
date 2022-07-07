@@ -9,10 +9,6 @@
             android:id="@+id/feed_menu"
             android:title="Feed" />
         <item
-            android:icon="@drawable/ic_open_profile_menu"
-            android:id="@+id/profile_menu"
-            android:title="Perfil" />
-        <item
             android:icon="@drawable/ic_open_my_books_menu"
             android:id="@+id/my_books_menu"
             android:title="Meus livros" />
@@ -24,6 +20,10 @@
             android:icon="@drawable/ic_open_likes_menu"
             android:id="@+id/likes_menu"
             android:title="Curtidas" />
+        <item
+            android:icon="@drawable/ic_open_profile_menu"
+            android:id="@+id/profile_menu"
+            android:title="Perfil" />
     </group>
     <group android:id="@+id/system_group" >
         <item
