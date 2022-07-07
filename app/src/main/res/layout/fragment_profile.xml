@@ -79,6 +79,7 @@
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
+        app:boxBackgroundColor="#d3d3d3"
         app:boxStrokeColor="@color/blue_grotto"
         app:hintTextColor="@color/blue_grotto"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,11 +87,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lastNameLayout">
 
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/profileEmailUser"
             style="@style/LoginTextInputInnerFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:enabled="false"
             android:hint="E-mail"
             android:inputType="textPersonName|textCapSentences" />
 
