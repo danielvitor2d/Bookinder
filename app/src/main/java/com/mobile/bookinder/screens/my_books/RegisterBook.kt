@@ -95,11 +95,6 @@ class RegisterBook : AppCompatActivity() {
       val check = fieldChecklist(fieldTitle, fieldAuthor, bookCoverUri)
 
       if (check) {
-        var userId = ""
-        GlobalScope.launch {
-          userId = db.collection("users").whereEqualTo("email", auth.currentUser?.email)
-            .get().await().documents[0].data?.get("user_id") as String
-        }
 
         val listOfPhotos = mutableListOf<String>()
 
@@ -140,7 +135,7 @@ class RegisterBook : AppCompatActivity() {
           fieldAuthor,
           fieldGender,
           fieldSynopsis,
-          userId,
+          auth.currentUser?.uid,
           listOfPhotos)
 
         book.book_id?.let { id ->

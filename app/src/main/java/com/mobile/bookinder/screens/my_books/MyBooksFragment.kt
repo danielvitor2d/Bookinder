@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -49,18 +50,11 @@ class MyBooksFragment : Fragment(), CardBookEvent {
     savedInstanceState: Bundle?,
   ): View {
 
-    var userId = ""
-    GlobalScope.launch {
-      val task = db.collection("users").whereEqualTo("email", auth.currentUser?.email)
-        .get().await()
-      userId = task.documents[0].data?.get("user_id") as String
-    }
-
     val query: Query = FirebaseFirestore.getInstance()
       .collection("books")
       .orderBy("book_id")
       .limit(50)
-      .whereEqualTo("owner", userId)
+      .whereEqualTo("owner", auth.currentUser?.uid)
 
     val options: FirestoreRecyclerOptions<Book> = FirestoreRecyclerOptions.Builder<Book>()
       .setQuery(query, Book::class.java)
@@ -71,6 +65,10 @@ class MyBooksFragment : Fragment(), CardBookEvent {
     _binding = FragmentMyBooksBinding.inflate(inflater, container, false)
 
     setUpRecyclerView(binding.root)
+
+    val x = (adapter as BookAdapter).itemCount.toString()
+
+    Log.d("Quantidade: ", x)
 
     return binding.root
   }
@@ -129,6 +127,11 @@ class MyBooksFragment : Fragment(), CardBookEvent {
   override fun onStart() {
     super.onStart()
     adapter?.startListening()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    adapter?.notifyDataSetChanged()
   }
 
   override fun onDestroy() {
