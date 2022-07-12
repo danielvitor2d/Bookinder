@@ -67,38 +67,41 @@ class BookAdapter(private val feedCardBookEvent: FeedCardBookEvent,
       .whereEqualTo("user_from", auth.currentUser?.uid)
       .get()
       .addOnCompleteListener{ task ->
-        if (task.isSuccessful){
-          Log.i("likesQuery", "carregou")
-        }
-      }
-    val likes: MutableList<Like>? = mutableListOf()
-    val booksILiked: MutableList<String>? = mutableListOf()
-    if (likesQuery.result.documents.size > 0){
-      for (like in likesQuery.result.documents){
-        val atual = like.toObject<Like>()
-        likes?.add(atual!!)
-        booksILiked?.add(atual?.book_id_to.toString())
-      }
-    }
+        var likes: MutableList<Like>? = mutableListOf()
+        var booksILiked: MutableList<String>? = mutableListOf()
+        var removeBooks: MutableList<String>? = mutableListOf()
 
-    val removeBooks: MutableList<String>? = mutableListOf()
-    holder.likeBook.setOnClickListener {
-      if (booksILiked?.contains(book.book_id.toString()) == true){
-        holder.likeBook.setImageResource(R.drawable.ic_star)
-        removeBooks?.add(book.book_id.toString())
-        for (like in likes!!){
-          if (like.book_id_to == book.book_id){
-            feedCardBookEvent.deslikeBook(book, position, like)
-            break
+        if (task.isSuccessful){
+          if (task.result.documents.size > 0){
+            for (like in task.result.documents){
+              val atual = like.toObject<Like>()
+              likes?.add(atual!!)
+              booksILiked?.add(atual?.book_id_to.toString())
+            }
+          }
+
+          holder.likeBook.setOnClickListener {
+            if (booksILiked?.contains(book.book_id.toString()) == true){
+              holder.likeBook.setImageResource(R.drawable.ic_star)
+              removeBooks?.add(book.book_id.toString())
+              for (like in likes!!){
+                if (like.book_id_to == book.book_id){
+                  feedCardBookEvent.deslikeBook(book, position, like)
+                  break
+                }
+              }
+
+            }else{
+              holder.likeBook.setImageResource(R.drawable.ic_filled_star)
+              booksILiked?.add(book.book_id.toString())
+              feedCardBookEvent.likeBook(book, position)
+            }
           }
         }
-
-      }else{
-        holder.likeBook.setImageResource(R.drawable.ic_filled_star)
-        booksILiked?.add(book.book_id.toString())
-        feedCardBookEvent.likeBook(book, position)
       }
-    }
+
+
+
 
     holder.card.setOnClickListener {
       feedCardBookEvent.showCardBook(book, position)
