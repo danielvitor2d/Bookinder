@@ -19,13 +19,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.mobile.bookinder.R
-import com.mobile.bookinder.common.dao.BookDAO
-import com.mobile.bookinder.common.dao.LikeDAO
-import com.mobile.bookinder.common.dao.MatchDAO
 import com.mobile.bookinder.common.interfaces.FeedCardBookEvent
 import com.mobile.bookinder.common.model.Book
 import com.mobile.bookinder.common.model.Like
-import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.databinding.FragmentFeedBinding
 import com.mobile.bookinder.screens.my_books.BookActivity
 import java.util.*
@@ -52,7 +48,6 @@ class FeedFragment: Fragment(), FeedCardBookEvent {
 
     val query: Query = FirebaseFirestore.getInstance()
       .collection("books")
-      .orderBy("book_id")
       .limit(50)
       .whereNotEqualTo("owner", auth.currentUser?.uid)
 
@@ -113,11 +108,33 @@ class FeedFragment: Fragment(), FeedCardBookEvent {
   }
 
   override fun likeBook(book: Book, position: Int) {
-//    likeDAO.insert(like)
-//    matchDAO.likeMacth(like)
+      val like = Like(UUID.randomUUID().toString(),
+        auth.currentUser?.uid.toString(),
+        book.owner.toString(),
+        book.book_id.toString())
+
+    like.like_id?.let { id ->
+      db.collection("likes").document(id).set(like).addOnCompleteListener { task ->
+        if (task.isSuccessful){
+          Toast.makeText(context, "Você curtiu ${book.title}", Toast.LENGTH_SHORT).show()
+        }else{
+          Toast.makeText(context, "Erro ao curtir livro", Toast.LENGTH_SHORT).show()
+        }
+      }
+    }
   }
 
   override fun deslikeBook(book: Book, position: Int, like: Like?) {
+    db.collection("like")
+      .document(like?.like_id.toString())
+      .delete()
+      .addOnCompleteListener { task ->
+        if (task.isSuccessful){
+          Toast.makeText(context, "Você descurtiu ${book.title}", Toast.LENGTH_SHORT).show()
+        }else{
+          Toast.makeText(context, "Erro ao descurtir livro", Toast.LENGTH_SHORT).show()
+        }
+      }
   }
 
 }

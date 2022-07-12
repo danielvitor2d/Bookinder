@@ -74,6 +74,7 @@ class SignInActivity : AppCompatActivity() {
                 .get()
                 .await()
 
+              Log.i("user", resultQuery.documents[0].toString())
               if (resultQuery.documents.size > 0 && resultQuery.documents[0].exists()) {
                 val user = resultQuery.documents[0].toObject<User>()
                 Log.d("User: ", user.toString())
