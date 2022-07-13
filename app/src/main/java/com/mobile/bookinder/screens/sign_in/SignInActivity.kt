@@ -35,6 +35,7 @@ class SignInActivity : AppCompatActivity() {
       db.collection("users").whereEqualTo("email", auth.currentUser?.email)
         .get()
         .addOnSuccessListener { result ->
+          result.documents[0].reference.update("user_id", auth.uid)
           val user = result.documents[0].toObject<User>()
 
           val bundle = Bundle()
@@ -74,7 +75,10 @@ class SignInActivity : AppCompatActivity() {
                 .get()
                 .await()
 
+              Log.i("user", resultQuery.documents[0].toString())
               if (resultQuery.documents.size > 0 && resultQuery.documents[0].exists()) {
+                resultQuery.documents[0].reference.update("user_id", auth.uid)
+
                 val user = resultQuery.documents[0].toObject<User>()
                 Log.d("User: ", user.toString())
 

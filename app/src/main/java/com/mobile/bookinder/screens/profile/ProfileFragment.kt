@@ -212,12 +212,13 @@ class ProfileFragment : Fragment() {
         }
       }
 
-      val userId = user?.user_id as String
-
       db.collection("users")
-        .document(userId)
-        .update(updates)
+        .whereEqualTo("email", email)
+        .get()
         .addOnSuccessListener {
+          for(document in it.documents)
+            document.reference.update(updates)
+
           Toast.makeText(context, "Usuário atualizado com sucesso", Toast.LENGTH_LONG).show()
 
           val headerView =
@@ -231,6 +232,8 @@ class ProfileFragment : Fragment() {
             Log.d("Aqui: ", "Daniel V -> $imagePath")
             photoView.setImageURI(profilePhoto)
           }
+        }.addOnFailureListener{
+          Toast.makeText(context, "Error ${it.message}", Toast.LENGTH_LONG).show()
         }
     }
   }

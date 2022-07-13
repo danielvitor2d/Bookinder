@@ -49,6 +49,8 @@ class LoadingActivity: AppCompatActivity() {
           .await()
 
         if (resultQuery.documents.size > 0 && resultQuery.documents[0].exists()) {
+          resultQuery.documents[0].reference.update("user_id", auth.uid)
+
           val user = resultQuery.documents[0].toObject<User>()
           Log.d("User: ", user.toString())
           bundle.putSerializable("user", user)

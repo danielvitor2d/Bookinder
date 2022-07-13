@@ -1,26 +1,41 @@
 package com.mobile.bookinder.screens.feed
 
-import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.mobile.bookinder.R
 import com.mobile.bookinder.common.dao.LikeDAO
 import com.mobile.bookinder.common.dao.PhotoDAO
+import com.mobile.bookinder.common.interfaces.CardBookEvent
 import com.mobile.bookinder.common.interfaces.FeedCardBookEvent
 import com.mobile.bookinder.common.model.Book
+import com.mobile.bookinder.common.model.Like
 import com.mobile.bookinder.common.model.LoggedUser
+import kotlinx.coroutines.tasks.await
+import java.util.*
 
-class BookAdapter(private val books: MutableList<Book>, private val feedCardBookEvent: FeedCardBookEvent): RecyclerView.Adapter<BookAdapter.MessageViewHolder>() {
-  private var likeDAO = LikeDAO()
-  private var loggedUser = LoggedUser()
-  private var user = loggedUser.getUser()
-  private var booksILiked = likeDAO.booksILiked(loggedUser.getUser()?.user_id)
+class BookAdapter(private val feedCardBookEvent: FeedCardBookEvent,
+                  options: FirestoreRecyclerOptions<Book>
+) : FirestoreRecyclerAdapter<Book, BookAdapter.MessageViewHolder>(options) {
+  private val storage = Firebase.storage
+  private val db = Firebase.firestore
+  private val auth = Firebase.auth
+
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
     val card = LayoutInflater
@@ -29,48 +44,53 @@ class BookAdapter(private val books: MutableList<Book>, private val feedCardBook
     return MessageViewHolder(card)
   }
 
-  override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-    holder.bookTitle.text = "Livro: ${books[position].title}"
-    holder.bookAuthor.text = "Autor(a): ${books[position].author}"
-    holder.gender.text = "Gênero: ${books[position].gender}"
+  override fun onBindViewHolder(holder: MessageViewHolder, position: Int, book: Book) {
+    "Livro: ${book.title}".also { holder.bookTitle.text = it }
+    holder.bookAuthor.text = "Autor(a): ${book.author}"
+    holder.gender.text = "Gênero: ${book.gender}"
 
-    val photoUuid = books[position].photos?.get(0)
+    if (book.photos?.size!! > 0) {
+      val imageUrl = book.photos?.get(0)
 
-    if(photoUuid != null){
-      val photoDAO = PhotoDAO()
-      val photo = photoDAO.findById(photoUuid)
-      val myBitmap = BitmapFactory.decodeFile(photo?.path)
-      holder.coverPhoto.setImageBitmap(myBitmap)
+      val storageRef = storage.reference
+      val imageRef = imageUrl?.let { storageRef.child(it) }
+
+      imageRef?.downloadUrl?.addOnSuccessListener {
+        Glide.with(holder.itemView)
+          .load(it.toString())
+          .centerCrop()
+          .into(holder.coverPhoto)
+      }
     }
 
-    val user_id = user?.user_id
-    val book_id = books[position].book_id
-    if (booksILiked.contains(book_id)){
-      holder.likeBook.setImageResource(R.drawable.ic_filled_star)
-    }
+    holder.likeBook.setImageResource(R.drawable.ic_star)
 
-    holder.likeBook.setOnClickListener {
-      booksILiked = likeDAO.booksILiked(loggedUser.getUser()?.user_id)
-      val check = booksILiked.contains(books[position].book_id)
-      if (!check){//se nunca curti, agr curto
-        feedCardBookEvent.likeBook(books[position], position)
-        holder.likeBook.setImageResource(R.drawable.ic_filled_star)
-      }else{//entao deslike
-        val like = book_id?.let { it1 -> likeDAO.findLike(user_id!!, it1) }
-        feedCardBookEvent.deslikeBook(books[position], position, like)
-        holder.likeBook.setImageResource(R.drawable.ic_star)
+    db.collection("likes")
+      .whereEqualTo("user_id_from", auth.currentUser?.uid)
+      .whereEqualTo("book_id_to", book.book_id)
+      .get()
+      .addOnSuccessListener { task ->
+        holder.liked = (task.documents.size > 0)
+
+        if (holder.liked){
+          holder.likeBook.setImageResource(R.drawable.ic_filled_star)
+        } else {
+          holder.likeBook.setImageResource(R.drawable.ic_star)
+        }
       }
 
+
+    holder.likeBook.setOnClickListener {
+      if (holder.liked){
+        feedCardBookEvent.deslikeBook(book, position, null)
+      }else{
+        feedCardBookEvent.likeBook(book, position)
+      }
     }
 
     holder.card.setOnClickListener {
-      feedCardBookEvent.showCardBook(books[position], position)
+      feedCardBookEvent.showCardBook(book, position)
     }
-
-  }
-
-  override fun getItemCount(): Int {
-    return books.size
   }
 
   class MessageViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -80,6 +100,6 @@ class BookAdapter(private val books: MutableList<Book>, private val feedCardBook
     val gender: TextView = itemView.findViewById(R.id.gender)
     val coverPhoto: ImageView = itemView.findViewById(R.id.coverPhoto)
     val likeBook: ImageButton = itemView.findViewById(R.id.imageButtonLikeBook)
-
+    var liked = false
   }
 }
