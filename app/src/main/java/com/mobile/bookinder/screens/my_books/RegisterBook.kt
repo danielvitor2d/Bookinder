@@ -16,16 +16,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.mobile.bookinder.common.dao.BookDAO
-import com.mobile.bookinder.common.dao.PhotoDAO
 import com.mobile.bookinder.common.model.Book
-import com.mobile.bookinder.common.model.LoggedUser
-import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.databinding.ActivityRegisterBookBinding
-import com.mobile.bookinder.util.URIPathHelper
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.util.*
 

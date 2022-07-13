@@ -199,17 +199,9 @@ class ProfileFragment : Fragment() {
         imagePath = "${UUID.randomUUID()}_${profilePhoto!!.path?.let { path -> File(path).name }}"
         updates["photo"] = "images/$imagePath"
         val imageRef = imagesRef.child(imagePath)
-        val uploadTask = imageRef.putFile(profilePhoto!!)
+        imageRef.putFile(profilePhoto!!)
         val lastPhotoRef = user?.photo?.let { lastPhoto -> storageRef.child(lastPhoto) }
-        val removeTask = lastPhotoRef?.delete()
-        GlobalScope.launch {
-          try {
-            removeTask?.await()
-            uploadTask.await()
-          } catch(ex: Exception) {
-            ex.message?.let { err -> Log.d("Error: ", err) }
-          }
-        }
+        lastPhotoRef?.delete()
       }
 
       db.collection("users")
@@ -229,7 +221,6 @@ class ProfileFragment : Fragment() {
           val photoView = headerView?.findViewById(R.id.imageView3) as ImageView
 
           if (imagePath.isNotEmpty()) {
-            Log.d("Aqui: ", "Daniel V -> $imagePath")
             photoView.setImageURI(profilePhoto)
           }
         }.addOnFailureListener{

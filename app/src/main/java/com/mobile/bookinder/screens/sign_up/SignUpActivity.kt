@@ -167,7 +167,7 @@ class SignUpActivity : AppCompatActivity() {
     auth.createUserWithEmailAndPassword(email, password)
       .addOnCompleteListener { task ->
         if (task.isSuccessful) {
-          val user = User(firstname, email)
+          val user = User(task.result.user?.uid, firstname, email)
 
           if (imageID != null) {
             user.photo = imageID

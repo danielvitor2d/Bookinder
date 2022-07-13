@@ -24,6 +24,7 @@ import com.mobile.bookinder.common.model.Like
 import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.databinding.FragmentLikesBinding
 import com.mobile.bookinder.screens.feed.BookAdapter
+import com.mobile.bookinder.screens.my_books.WrapContentLinearLayoutManager
 
 class LikesFragment: Fragment() {
   private var _binding: FragmentLikesBinding? = null
@@ -46,10 +47,12 @@ class LikesFragment: Fragment() {
 
   private fun setUpRecyclerView(view: View) {
     val likesList = view.findViewById<RecyclerView>(R.id.matchesList)
-    likesList.layoutManager = LinearLayoutManager(view.context)
+    likesList.layoutManager = WrapContentLinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
 
-    val query: Query = FirebaseFirestore.getInstance()
+    val query: Query = db
       .collection("likes")
+      .orderBy("like_id")
+      .limit(50)
       .whereEqualTo("user_id_to", auth.currentUser?.uid)
 
     val options: FirestoreRecyclerOptions<Like> = FirestoreRecyclerOptions.Builder<Like>()
@@ -63,21 +66,15 @@ class LikesFragment: Fragment() {
 
   override fun onStart() {
     super.onStart()
-
     adapter?.startListening()
   }
 
-  override fun onResume() {
-    super.onResume()
-    adapter?.notifyDataSetChanged()
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
+  override fun onStop() {
+    super.onStop()
     adapter?.stopListening()
   }
 
-  override fun onDestroyView(){
+  override fun onDestroyView() {
     super.onDestroyView()
     _binding = null
   }

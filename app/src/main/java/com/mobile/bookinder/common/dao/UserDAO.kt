@@ -14,7 +14,6 @@ import com.mobile.bookinder.common.model.Photo
 import com.mobile.bookinder.common.model.User
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.File

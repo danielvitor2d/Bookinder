@@ -25,7 +25,6 @@ import com.mobile.bookinder.common.model.Like
 import com.mobile.bookinder.databinding.FragmentFeedBinding
 import com.mobile.bookinder.screens.my_books.BookActivity
 import java.util.*
-import java.util.Date
 
 class FeedFragment: Fragment(), FeedCardBookEvent {
   private var _binding: FragmentFeedBinding? = null
@@ -142,5 +141,4 @@ class FeedFragment: Fragment(), FeedCardBookEvent {
         }
       }
   }
-
 }

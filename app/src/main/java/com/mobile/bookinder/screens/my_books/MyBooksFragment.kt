@@ -52,7 +52,7 @@ class MyBooksFragment : Fragment(), CardBookEvent {
     savedInstanceState: Bundle?,
   ): View {
 
-    val query: Query = FirebaseFirestore.getInstance()
+    val query: Query = db
       .collection("books")
       .orderBy("book_id")
       .limit(50)

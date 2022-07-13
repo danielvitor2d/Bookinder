@@ -1,13 +1,11 @@
 package com.mobile.bookinder.screens.feed
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -15,19 +13,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.mobile.bookinder.R
-import com.mobile.bookinder.common.dao.LikeDAO
-import com.mobile.bookinder.common.dao.PhotoDAO
-import com.mobile.bookinder.common.interfaces.CardBookEvent
 import com.mobile.bookinder.common.interfaces.FeedCardBookEvent
 import com.mobile.bookinder.common.model.Book
-import com.mobile.bookinder.common.model.Like
-import com.mobile.bookinder.common.model.LoggedUser
-import kotlinx.coroutines.tasks.await
-import java.util.*
 
 class BookAdapter(private val feedCardBookEvent: FeedCardBookEvent,
                   options: FirestoreRecyclerOptions<Book>
@@ -46,8 +36,8 @@ class BookAdapter(private val feedCardBookEvent: FeedCardBookEvent,
 
   override fun onBindViewHolder(holder: MessageViewHolder, position: Int, book: Book) {
     "Livro: ${book.title}".also { holder.bookTitle.text = it }
-    holder.bookAuthor.text = "Autor(a): ${book.author}"
-    holder.gender.text = "Gênero: ${book.gender}"
+    "Autor(a): ${book.author}".also { holder.bookAuthor.text = it }
+    "Gênero: ${book.gender}".also { holder.gender.text = it }
 
     if (book.photos?.size!! > 0) {
       val imageUrl = book.photos?.get(0)

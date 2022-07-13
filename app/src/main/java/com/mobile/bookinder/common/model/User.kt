@@ -13,6 +13,4 @@ data class User(
 ) : Serializable {
   constructor(uuid: String, _firstname:String, _email: String) :
     this(uuid, _email, _firstname, "", "", mutableListOf())
-  constructor(_firstname:String, _email: String) :
-    this(UUID.randomUUID().toString(), _email, _firstname, "", "", mutableListOf())
 }
