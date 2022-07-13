@@ -1,5 +1,6 @@
 package com.mobile.bookinder.screens.my_books
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +37,7 @@ class MyBooksFragment : Fragment(), CardBookEvent {
   private val binding get() = _binding!!
 
   private lateinit var itemList: RecyclerView
-  private var adapter: FirestoreRecyclerAdapter<Book, BookAdapter.MessageViewHolder>? = null
+  private lateinit var adapter: BookAdapter
 
   private var storage = Firebase.storage
   private var db = Firebase.firestore
@@ -66,25 +68,22 @@ class MyBooksFragment : Fragment(), CardBookEvent {
 
     setUpRecyclerView(binding.root)
 
-    val x = (adapter as BookAdapter).itemCount.toString()
-
-    Log.d("Quantidade: ", x)
-
     return binding.root
   }
 
   private fun setUpRecyclerView(view: View) {
     itemList = view.findViewById(R.id.itemListMyBooks)
-    itemList.layoutManager = LinearLayoutManager(view.context)
+    itemList.layoutManager = WrapContentLinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
     itemList.adapter = adapter
 
     binding.register.setOnClickListener {
-      val intent = Intent(this.context, RegisterBook::class.java)
-      startActivity(intent);
+      contractLauncher.launch(Book())
     }
   }
 
-  private fun actionRemoveBook(context: Context, book: Book) {
+  private fun actionRemoveBook(context: Context, book: Book, position: Int) {
+    Log.d("Book: ", "$book $position")
+
     val alertDialogBuilder = AlertDialog.Builder(context)
     alertDialogBuilder.setTitle("Deseja remover o livro ${book.title}?")
 
@@ -97,13 +96,7 @@ class MyBooksFragment : Fragment(), CardBookEvent {
         }
       }
 
-      val bookId = book.book_id as String
-
-      db.collection("books")
-        .document(bookId)
-        .delete()
-
-      adapter?.notifyDataSetChanged()
+      adapter.deleteItem(position)
 
       dialog.dismiss()
     }
@@ -124,19 +117,22 @@ class MyBooksFragment : Fragment(), CardBookEvent {
     startActivity(intent)
   }
 
+  private val contractLauncher = registerForActivityResult(MyContract()) { book: Book? ->
+    if (book == null) {
+      return@registerForActivityResult
+    }
+
+    adapter.notifyItemInserted(adapter.itemCount-1)
+  }
+
   override fun onStart() {
     super.onStart()
-    adapter?.startListening()
+    adapter.startListening()
   }
 
-  override fun onResume() {
-    super.onResume()
-    adapter?.notifyDataSetChanged()
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    adapter?.stopListening()
+  override fun onStop() {
+    super.onStop()
+    adapter.stopListening()
   }
 
   override fun onDestroyView() {
@@ -145,10 +141,30 @@ class MyBooksFragment : Fragment(), CardBookEvent {
   }
 
   override fun removeCardBook(book: Book, position: Int) {
-    actionRemoveBook(binding.root.context, book)
+    actionRemoveBook(binding.root.context, book, position)
   }
 
   override fun showCardBook(book: Book, position: Int) {
     openBookPage(book)
+  }
+}
+
+class MyContract: ActivityResultContract<Book, Book>() {
+  override fun createIntent(context: Context, request: Book) =
+    Intent(context, RegisterBook::class.java).apply {
+      putExtra("book", request)
+    }
+
+  override fun parseResult(resultCode: Int, intent: Intent?): Book? {
+    if (resultCode != Activity.RESULT_OK) {
+      return null
+    }
+
+    return intent?.getSerializableExtra(RECEIVE_CODE) as Book
+  }
+
+  companion object {
+    const val SEND_CODE = "send_code"
+    const val RECEIVE_CODE = "receive_code"
   }
 }

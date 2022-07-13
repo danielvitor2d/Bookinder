@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -55,6 +54,12 @@ class BookAdapter(
 
     holder.card.setOnClickListener {
       cardBookEvent.showCardBook(book, position)
+    }
+  }
+
+  fun deleteItem(position: Int) {
+    snapshots.getSnapshot(position).reference.delete().addOnSuccessListener {
+      this.notifyItemRemoved(position)
     }
   }
 

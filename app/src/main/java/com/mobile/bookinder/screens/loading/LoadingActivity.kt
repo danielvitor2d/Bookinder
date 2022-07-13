@@ -19,9 +19,6 @@ import com.mobile.bookinder.common.model.User
 import com.mobile.bookinder.databinding.ActivityLoadingBinding
 import com.mobile.bookinder.screens.home.HomeActivity
 import com.mobile.bookinder.screens.sign_in.SignInActivity
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class LoadingActivity: AppCompatActivity() {
   private lateinit var binding: ActivityLoadingBinding
@@ -40,23 +37,21 @@ class LoadingActivity: AppCompatActivity() {
     showProgress(true)
 
     if (auth.currentUser != null) {
-      GlobalScope.launch {
-        val bundle = Bundle()
+      val bundle = Bundle()
 
-        val resultQuery = db.collection("users")
-          .whereEqualTo("email", auth.currentUser?.email)
-          .get()
-          .await()
+      db.collection("users")
+        .whereEqualTo("email", auth.currentUser?.email)
+        .get()
+        .addOnSuccessListener { resultQuery ->
+          if (resultQuery.documents.size > 0 && resultQuery.documents[0].exists()) {
+            resultQuery.documents[0].reference.update("user_id", auth.uid)
 
-        if (resultQuery.documents.size > 0 && resultQuery.documents[0].exists()) {
-          resultQuery.documents[0].reference.update("user_id", auth.uid)
-
-          val user = resultQuery.documents[0].toObject<User>()
-          Log.d("User: ", user.toString())
-          bundle.putSerializable("user", user)
-          updateUI(applicationContext, HomeActivity::class.java, bundle)
+            val user = resultQuery.documents[0].toObject<User>()
+            Log.d("User: ", user.toString())
+            bundle.putSerializable("user", user)
+            updateUI(applicationContext, HomeActivity::class.java, bundle)
+          }
         }
-      }
     } else {
       updateUI(applicationContext, SignInActivity::class.java, null)
     }
@@ -75,9 +70,4 @@ class LoadingActivity: AppCompatActivity() {
     startActivity(intent)
     finish()
   }
-
-//  private suspend fun signInAnonymously() {
-//    auth.signInAnonymously().await()
-//    updateUI(this, SignInActivity::class.java)
-//  }
 }

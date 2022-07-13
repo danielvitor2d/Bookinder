@@ -1,6 +1,8 @@
 package com.mobile.bookinder.screens.my_books
 
+import android.app.Activity
 import android.content.ContentValues
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -98,56 +100,53 @@ class RegisterBook : AppCompatActivity() {
 
         val listOfPhotos = mutableListOf<String>()
 
-        if (bookCoverUri != null && bookCoverUri?.path?.isNotEmpty() == true) {
-          val imagePath = "${UUID.randomUUID()}_${bookCoverUri!!.path?.let { path -> File(path).name }}"
-          listOfPhotos.add("images/$imagePath")
-          val imageRef = imagesRef.child(imagePath)
-          val uploadTask = imageRef.putFile(bookCoverUri!!)
-          GlobalScope.launch {
-            uploadTask.await()
-          }
-        }
-
-        if (backCoverUri != null && backCoverUri?.path?.isNotEmpty() == true) {
-          val imagePath = "${UUID.randomUUID()}_${backCoverUri!!.path?.let { path -> File(path).name }}"
-          listOfPhotos.add("images/$imagePath")
-          val imageRef = imagesRef.child(imagePath)
-          val uploadTask = imageRef.putFile(backCoverUri!!)
-          GlobalScope.launch {
-            uploadTask.await()
-          }
-        }
-
-        for (uri in currentImages) {
-          if (uri.path?.isNotEmpty() == true) {
-            val imagePath = "${UUID.randomUUID()}_${uri.path?.let { path -> File(path).name }}"
+        val imagePath =
+          "${UUID.randomUUID()}_${bookCoverUri!!.path?.let { path -> File(path).name }}"
+        listOfPhotos.add("images/$imagePath")
+        val imageRef = imagesRef.child(imagePath)
+        imageRef.putFile(bookCoverUri!!).addOnCompleteListener {
+          if (backCoverUri != null && backCoverUri?.path?.isNotEmpty() == true) {
+            val imagePath =
+              "${UUID.randomUUID()}_${backCoverUri!!.path?.let { path -> File(path).name }}"
             listOfPhotos.add("images/$imagePath")
             val imageRef = imagesRef.child(imagePath)
-            val uploadTask = imageRef.putFile(uri)
-            GlobalScope.launch {
-              uploadTask.await()
+            val uploadTask = imageRef.putFile(backCoverUri!!)
+          }
+
+          for (uri in currentImages) {
+            if (uri.path?.isNotEmpty() == true) {
+              val imagePath = "${UUID.randomUUID()}_${uri.path?.let { path -> File(path).name }}"
+              listOfPhotos.add("images/$imagePath")
+              val imageRef = imagesRef.child(imagePath)
+              val uploadTask = imageRef.putFile(uri)
+            }
+          }
+
+          val book = Book(UUID.randomUUID().toString(),
+            fieldTitle,
+            fieldAuthor,
+            fieldGender,
+            fieldSynopsis,
+            auth.currentUser?.uid,
+            listOfPhotos)
+
+          book.book_id?.let { id ->
+            db.collection("books").document(id).set(book).addOnCompleteListener { task ->
+              if (task.isSuccessful) {
+                Toast.makeText(this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show()
+
+                setResult(Activity.RESULT_OK, Intent().apply {
+                  putExtra(MyContract.RECEIVE_CODE, book)
+                })
+
+                finish()
+              } else {
+                Toast.makeText(this, "Erro ao cadastrar livro", Toast.LENGTH_LONG).show()
+              }
             }
           }
         }
 
-        val book = Book(UUID.randomUUID().toString(),
-          fieldTitle,
-          fieldAuthor,
-          fieldGender,
-          fieldSynopsis,
-          auth.currentUser?.uid,
-          listOfPhotos)
-
-        book.book_id?.let { id ->
-          db.collection("books").document(id).set(book).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-              Toast.makeText(this, "Cadastrado com sucesso", Toast.LENGTH_LONG).show()
-              finish()
-            } else {
-              Toast.makeText(this, "Erro ao cadastrar livro", Toast.LENGTH_LONG).show()
-            }
-          }
-        }
 
       } else {
         Toast.makeText(this, "Preencha os campos obrigatórios", Toast.LENGTH_LONG).show()
