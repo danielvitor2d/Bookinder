@@ -41,7 +41,7 @@ class LikeDAO {
     val booksUuid: MutableList<String> = mutableListOf()
     for (like in likeList){
       if(like.user_id_from == user_id){
-        booksUuid.add(like.book_id_to)
+        booksUuid.add(like.book_id_to!!)
       }
     }
     return booksUuid

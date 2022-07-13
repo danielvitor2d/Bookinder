@@ -38,11 +38,12 @@ class BookActivity : AppCompatActivity() {
   private fun setUpListeners(book: Book?) {
 
     db.collection("users")
-      .document(book?.owner.toString())
+      .whereEqualTo("user_id", book?.owner.toString())
       .get()
       .addOnCompleteListener {
         if (it.isSuccessful) {
-          val user = it.result.toObject<User>()
+          val user = it.result.documents[0].toObject<User>()
+
           binding.nameUser.text = user?.firstname
           binding.emailUser.text = user?.email
           val photoUser = user?.photo

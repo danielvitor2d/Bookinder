@@ -47,6 +47,7 @@ class OtherProfileActivity: AppCompatActivity(), FeedCardBookEvent {
      */
 
     val userId = intent.getStringExtra("user_id")
+
     if (userId != null) {
       user = userDAO.getById(userId)
     } else {

@@ -48,7 +48,6 @@ class FeedFragment: Fragment(), FeedCardBookEvent {
 
     val query: Query = FirebaseFirestore.getInstance()
       .collection("books")
-      .limit(50)
       .whereNotEqualTo("owner", auth.currentUser?.uid)
 
     val options: FirestoreRecyclerOptions<Book> = FirestoreRecyclerOptions.Builder<Book>()
@@ -116,6 +115,8 @@ class FeedFragment: Fragment(), FeedCardBookEvent {
     like.like_id?.let { id ->
       db.collection("likes").document(id).set(like).addOnCompleteListener { task ->
         if (task.isSuccessful){
+          adapter?.notifyItemChanged(position)
+
           Toast.makeText(context, "Você curtiu ${book.title}", Toast.LENGTH_SHORT).show()
         }else{
           Toast.makeText(context, "Erro ao curtir livro", Toast.LENGTH_SHORT).show()
@@ -125,11 +126,16 @@ class FeedFragment: Fragment(), FeedCardBookEvent {
   }
 
   override fun deslikeBook(book: Book, position: Int, like: Like?) {
-    db.collection("like")
-      .document(like?.like_id.toString())
-      .delete()
+    db.collection("likes")
+      .whereEqualTo("user_id_from", auth.currentUser?.uid)
+      .whereEqualTo("book_id_to", book.book_id)
+      .get()
       .addOnCompleteListener { task ->
         if (task.isSuccessful){
+          for(document in task.result.documents)
+            document.reference.delete()
+
+          adapter?.notifyItemChanged(position)
           Toast.makeText(context, "Você descurtiu ${book.title}", Toast.LENGTH_SHORT).show()
         }else{
           Toast.makeText(context, "Erro ao descurtir livro", Toast.LENGTH_SHORT).show()

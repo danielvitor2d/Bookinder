@@ -63,50 +63,34 @@ class BookAdapter(private val feedCardBookEvent: FeedCardBookEvent,
       }
     }
 
-    val likesQuery = db.collection("likes")
-      .whereEqualTo("user_from", auth.currentUser?.uid)
+    holder.likeBook.setImageResource(R.drawable.ic_star)
+
+    db.collection("likes")
+      .whereEqualTo("user_id_from", auth.currentUser?.uid)
+      .whereEqualTo("book_id_to", book.book_id)
       .get()
-      .addOnCompleteListener{ task ->
-        var likes: MutableList<Like>? = mutableListOf()
-        var booksILiked: MutableList<String>? = mutableListOf()
-        var removeBooks: MutableList<String>? = mutableListOf()
+      .addOnSuccessListener { task ->
+        holder.liked = (task.documents.size > 0)
 
-        if (task.isSuccessful){
-          if (task.result.documents.size > 0){
-            for (like in task.result.documents){
-              val atual = like.toObject<Like>()
-              likes?.add(atual!!)
-              booksILiked?.add(atual?.book_id_to.toString())
-            }
-          }
-
-          holder.likeBook.setOnClickListener {
-            if (booksILiked?.contains(book.book_id.toString()) == true){
-              holder.likeBook.setImageResource(R.drawable.ic_star)
-              removeBooks?.add(book.book_id.toString())
-              for (like in likes!!){
-                if (like.book_id_to == book.book_id){
-                  feedCardBookEvent.deslikeBook(book, position, like)
-                  break
-                }
-              }
-
-            }else{
-              holder.likeBook.setImageResource(R.drawable.ic_filled_star)
-              booksILiked?.add(book.book_id.toString())
-              feedCardBookEvent.likeBook(book, position)
-            }
-          }
+        if (holder.liked){
+          holder.likeBook.setImageResource(R.drawable.ic_filled_star)
+        } else {
+          holder.likeBook.setImageResource(R.drawable.ic_star)
         }
       }
 
 
-
+    holder.likeBook.setOnClickListener {
+      if (holder.liked){
+        feedCardBookEvent.deslikeBook(book, position, null)
+      }else{
+        feedCardBookEvent.likeBook(book, position)
+      }
+    }
 
     holder.card.setOnClickListener {
       feedCardBookEvent.showCardBook(book, position)
     }
-
   }
 
   class MessageViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -116,6 +100,6 @@ class BookAdapter(private val feedCardBookEvent: FeedCardBookEvent,
     val gender: TextView = itemView.findViewById(R.id.gender)
     val coverPhoto: ImageView = itemView.findViewById(R.id.coverPhoto)
     val likeBook: ImageButton = itemView.findViewById(R.id.imageButtonLikeBook)
-
+    var liked = false
   }
 }
