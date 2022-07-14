@@ -71,7 +71,7 @@ class OtherProfileActivity : AppCompatActivity(), FeedCardBookEvent {
 
   private fun openBookPage(book: Book) {
     val bundle = Bundle()
-    bundle.putString("book_id", book.book_id.toString())
+    bundle.putSerializable("book", book)
 
     val intent = Intent(binding.root.context, BookActivity::class.java)
     intent.putExtras(bundle)
