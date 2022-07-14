@@ -13,9 +13,9 @@
             android:id="@+id/my_books_menu"
             android:title="Meus livros" />
         <item
-            android:icon="@drawable/ic_open_matches_menu"
-            android:id="@+id/matches_menu"
-            android:title="Matches" />
+            android:icon="@drawable/ic_open_map"
+            android:id="@+id/maps_menu"
+            android:title="Mapa" />
         <item
             android:icon="@drawable/ic_open_likes_menu"
             android:id="@+id/likes_menu"

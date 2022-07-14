@@ -1,5 +1,6 @@
 package com.mobile.bookinder.screens.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.mobile.bookinder.common.dao.UserDAO
 import com.mobile.bookinder.common.model.LoggedUser
 import com.mobile.bookinder.databinding.FragmentSettingsBinding
+import com.mobile.bookinder.screens.maps.MapsActivity
 
 class SettingsFragment: Fragment() {
 
@@ -20,14 +22,14 @@ class SettingsFragment: Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
     _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-    var user = loggedUser.getUser()
+    val user = loggedUser.getUser()
 
     binding.updatePassword.setOnClickListener {
-      var senha = binding.editTextPassword.text.toString()
-      var confirmarSenha = binding.editTextConfirmPassword.text.toString()
+      val senha = binding.editTextPassword.text.toString()
+      val confirmarSenha = binding.editTextConfirmPassword.text.toString()
 
       if (senha.equals("") || confirmarSenha.equals("")) {
         Toast.makeText(binding.root.context, "Senha não pode ser vazia!", Toast.LENGTH_SHORT).show()
